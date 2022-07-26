@@ -16,9 +16,9 @@
 ### Description
 
 ### Development Plan
-1. ~~Set up framework for Go web-server~~
-2. ~~Write code to hit OneStepGPS API~~
-3. Initial front-end with Vue JS
+1. ~Set up framework for Go web-server~
+2. ~Write code to hit OneStepGPS API~
+3. ~Initial front-end with Vue JS~
     1. ~Ingest device data into store? (or Vue equivalent)~
     2. ~List of devices w/ name, current position, and active state or drive status.~
     3. ~Display devices on Google Map~
