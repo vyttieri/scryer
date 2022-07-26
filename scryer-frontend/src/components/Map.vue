@@ -11,9 +11,15 @@
 		:center="center"
 		:zoom="7"
 		map-type-id="terrain"
-		style="width: 100vw; height: 900px"
+		style="width: 100vw; height: 100%"
 	>
+		<GMapMarker
+			:key="'device.device_id' + '-marker'"
+			:position="device.latest_accurate_device_point.device_point_detail.lat_lng"
+			v-for="device in devices"
+		/>
 	</GMapMap>
+
 </template>
 
 <style scoped>

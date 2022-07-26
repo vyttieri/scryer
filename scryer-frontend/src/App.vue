@@ -20,8 +20,14 @@ fetchDevices()
     <p v-if="error">{{ error.message }}</p>
     <div id="q-app">
       <div class="q-pa-md">
-        <List />
-        <Map />
+        <div class="row">
+          <div class="col-4">
+            <List />
+          </div>
+          <div class="col-8">
+            <Map />
+          </div>
+        </div>
       </div>
     </div>
   </main>
