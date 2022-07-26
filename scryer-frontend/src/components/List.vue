@@ -1,14 +1,8 @@
 <script setup>
-defineProps({
-  msg: {
-    type: String,
-    required: false
-  }
-})
 </script>
 
 <template>
-  <q-list bordered separator>
+  <q-list bordered separator >
     <q-item clickable v-ripple>
       <q-item-section>Single line item</q-item-section>
     </q-item>
