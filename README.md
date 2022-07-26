@@ -1,6 +1,13 @@
 # Scryer
 "One who divines, sees or predicts the future by means of a scrying tool; especially a crystal ball."
 ![Scryer](scryer.png)
+
+### TODO
+- Make `golangci-lint` run properly in SublimeText
+
+### Run
+- `go run main.go` or with air installed `air`
+
 ### Description
 
 ### Development Plan
@@ -24,6 +31,7 @@
 ### Structure
 
 ### Setup
+- `ONESTEPGPS_API_KEY` needs to be set in your local `ENV`
 
 ### Limitations
 
