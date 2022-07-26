@@ -1,5 +1,6 @@
 <script setup>
 import { storeToRefs } from 'pinia'
+import { onMounted } from 'vue'
 
 import { useDeviceStore } from './stores/device'
 
@@ -9,7 +10,12 @@ import Map from './components/Map.vue'
 const { loading, error } = storeToRefs(useDeviceStore())
 const { fetchDevices }  = useDeviceStore()
 
-fetchDevices()
+onMounted(() => {
+  fetchDevices()
+
+  setInterval(fetchDevices, 60000) // 60,000 ms = 1 minute
+})
+
 </script>
 
 <template>
