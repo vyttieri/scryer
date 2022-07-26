@@ -5,9 +5,12 @@
 ### TODO
 - Make `golangci-lint` run properly in SublimeText
 - Error handling for OneStepGPS API
+- Multiple `.gitignore` business
 
 ### Run
 - `go run main.go` or with air installed `air`
+- `npm run lint`
+- `npm run dev`
 
 ### Description
 
@@ -33,6 +36,7 @@
 ### Structure
 
 ### Setup
+- `npm install`
 - `ONESTEPGPS_API_KEY` needs to be set in your local `ENV`
     - `export ONESTEPGPS_API_KEY=[API_KEY]`
 
