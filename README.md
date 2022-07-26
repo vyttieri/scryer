@@ -6,6 +6,7 @@
 - Make `golangci-lint` run properly in SublimeText
 - Error handling for OneStepGPS API
 - Multiple `.gitignore` business
+- How to integrate JS dev server and Go?
 
 ### Run
 - `go run main.go` or with air installed `air`
