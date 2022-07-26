@@ -6,7 +6,7 @@ import { useDeviceStore } from './stores/device'
 import List from './components/List.vue'
 
 
-const { devices, loading, error } = storeToRefs(useDeviceStore())
+const { loading, error } = storeToRefs(useDeviceStore())
 const { fetchDevices }  = useDeviceStore()
 
 fetchDevices()
@@ -19,7 +19,7 @@ fetchDevices()
     <p v-if="loading">Loading device data...</p>
     <p v-if="error">{{ error.message }}</p>
     <p v-if="devices" v-for="device in devices" :key="device.id">
-      <p>{{ device }}</p>
+      <p>{{ device.display_name }}</p>
     </p>
     <div id="q-app">
       <div class="q-pa-md">

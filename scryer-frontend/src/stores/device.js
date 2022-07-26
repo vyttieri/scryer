@@ -17,9 +17,9 @@ export const useDeviceStore = defineStore({
       try {
         this.devices = await fetch('http://localhost:5173/ping')
           .then(response => response.json())
-      } catch (error) {
-        this.error = error
-      } finally {
+          .then(data => data.response.result_list)
+      }
+      finally {
         this.loading = false
       }
     }
