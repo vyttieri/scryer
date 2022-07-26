@@ -1,15 +1,24 @@
+<script setup>
+defineProps({
+  msg: {
+    type: String,
+    required: false
+  }
+})
+</script>
+
 <template>
-  <div class="item">
-    <i>
-      <slot name="icon"></slot>
-    </i>
-    <div class="details">
-      <h3>
-        <slot name="heading"></slot>
-      </h3>
-      <slot></slot>
-    </div>
-  </div>
+  <q-list bordered separator>
+    <q-item clickable v-ripple>
+      <q-item-section>Single line item</q-item-section>
+    </q-item>
+    <q-item clickable v-ripple>
+      <q-item-section>
+        <q-item-label>Item with caption</q-item-label>
+        <q-item-label caption>Caption</q-item-label>
+      </q-item-section>
+    </q-item>
+  </q-list>
 </template>
 
 <style scoped>
