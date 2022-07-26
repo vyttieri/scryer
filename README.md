@@ -19,8 +19,8 @@
 1. ~~Set up framework for Go web-server~~
 2. ~~Write code to hit OneStepGPS API~~
 3. Initial front-end with Vue JS
-    1. Ingest device data into store? (or Vue equivalent)
-    2. List of devices w/ name, current position, and active state or drive status.
+    1. ~Ingest device data into store? (or Vue equivalent)~
+    2. ~List of devices w/ name, current position, and active state or drive status.~
     3. Display devices on Google Map
     4. Add device refresh
 4. Add additional front-end functionality
@@ -32,7 +32,8 @@
 6. Set up user login
 7. Save user preferences on back-end
 8. Add user-uploaded icons functionality
-9. Write some tests
+9. Prettify frontend
+10. Write some tests?
 
 ### Structure
 
@@ -40,6 +41,7 @@
 - `npm install`
 - `ONESTEPGPS_API_KEY` needs to be set in your local `ENV`
     - `export ONESTEPGPS_API_KEY=[API_KEY]`
+- `VITE_GOOGLE_MAPS_API_KEY` needs to be set in `scryer-frontend/.env`
 
 ### Limitations
 
