@@ -8,11 +8,22 @@
   const { getDeviceVisibility, setDeviceVisibility, setCenter, setSort } = usePreferencesStore()
 
   const columns = [
+    { name: 'visible', required: false },
+    { name: 'center' , required: false },
     {
       name: 'name',
-      field: row => row.display_name,
       sortable: true,
       label: 'Device Name',
+    },
+    {
+      name: 'active_state',
+      sortable: true,
+      label: 'Active State',
+    },
+    {
+      name: 'drive_status',
+      sortable: true,
+      label: 'Drive Status',
     },
   ]
 
@@ -33,7 +44,27 @@
     row-key="name"
     class="table"
   >
-    <q-th>Sup</q-th>
+    <template v-slot:body="props">
+      <q-tr :props="props">
+        <q-td key="icon" clickable @click="setDeviceVisibility(props.row)">
+          <q-icon v-if="getDeviceVisibility(props.row)" color="primary" name="visibility" />
+          <q-icon v-else color="negative" name="visibility_off" />
+        </q-td>
+        <q-td key="icon">
+          <q-icon clickable color="primary" name="my_location" @click="setCenter(props.row)"/>
+        </q-td>
+        <q-td key="name" :props="props">
+          {{ props.row.display_name }}
+        </q-td>
+        <q-td key="name" :props="props">
+          {{ props.row.active_state }}
+        </q-td>
+        <q-td key="name" :props="props">
+          {{ props.row.latest_accurate_device_point.device_state.drive_status }}
+        </q-td>
+      </q-tr>
+
+    </template>
   </q-table>
 
 <!--   <q-list bordered padding separator v-if="devices" v-for="device in devices" :key="device.device_id">
