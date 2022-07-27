@@ -23,7 +23,7 @@ export const usePreferencesStore = defineStore({
       // TODO: use Reduce or Map or something
       devices.forEach(device => reducedDevices[device.device_id] = { visible: true })
       console.log('logging reducedDevices', reducedDevices)
-      this.devicePreferences = reducedDevices
+      this.$patch({ devicePreferences: reducedDevices })
     },
     setDeviceVisibility(device) {
       console.log('we clicked the device icon', device, device.device_id)
