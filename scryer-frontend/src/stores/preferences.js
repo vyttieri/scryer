@@ -7,7 +7,6 @@ export const usePreferencesStore = defineStore({
     sortColumn: 'display_name',
   }),
   getters: {
-    // TODO: Compose stores instead?
     getDeviceVisibility: state => {
       return deviceId => {
         var device = state.devicePreferences[deviceId]
@@ -19,16 +18,17 @@ export const usePreferencesStore = defineStore({
   actions: {
     initOrPatchDevicePreferences(devices) {
       console.log('logging devices', devices)
-      let reducedDevices = {}
+      let devicePreferences = {}
       // TODO: use Reduce or Map or something
-      devices.forEach(device => reducedDevices[device.device_id] = { visible: true })
-      console.log('logging reducedDevices', reducedDevices)
-      this.$patch({ devicePreferences: reducedDevices })
+      devices.forEach(device => devicePreferences[device.device_id] = { visible: true })
+      console.log('logging reducedDevices', devicePreferences)
+      // TODO: Figure out how $patch works
+      // spread will overwrite with second object, so we're effectively only adding new devices
+      this.devicePreferences = { ...devicePreferences, ...this.devicePreferences}
     },
     setDeviceVisibility(device) {
       console.log('we clicked the device icon', device, device.device_id)
 
-      // TODO: Better way to default visible
       var visible = this.devicePreferences[device.device_id].visible
       this.devicePreferences[device.device_id] = { 'visible': !visible }
     },
