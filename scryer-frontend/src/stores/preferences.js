@@ -28,8 +28,8 @@ export const usePreferencesStore = defineStore({
       console.log('we clicked the device icon', device)
       // TODO: Better way to default visible
       var devicePreferences = this.devices[device.device_id]
-      var visible = devicePreferences === undefined ? true : !devicePreferencesdevice === undefined ? true : !device.visible.visible
-      this.devices[device.device_id] = visible
+      var visible = devicePreferences === undefined ? true : !devicePreferences.visible
+      this.devices[device.device_id] = { 'visible': visible }
     },
   },
 })
