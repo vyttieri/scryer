@@ -12,6 +12,7 @@
 - `go run main.go` or with air installed `air`
 - `npm run lint`
 - `npm run dev`
+- `mysql.server start`
 
 ### Description
 
@@ -42,6 +43,7 @@
 - `ONESTEPGPS_API_KEY` needs to be set in your local `ENV`
     - `export ONESTEPGPS_API_KEY=[API_KEY]`
 - `VITE_GOOGLE_MAPS_API_KEY` needs to be set in `scryer-frontend/.env`
+- In MySQL: `CREATE DATABASE scryer;`; `CREATE USER 'scryer'@'localhost' IDENTIFIED BY 'onestepgpsr00lz';` `GRANT ALL PRIVILEGES ON scryer.* TO 'scryer'@'localhost' WITH GRANT OPTION;`
 
 ### Limitations
 

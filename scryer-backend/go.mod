@@ -1,4 +1,4 @@
-module vyttieri/scryer/scryer-backend
+module scryer-backend
 
 go 1.18
 
