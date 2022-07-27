@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"fmt"
@@ -29,7 +29,3 @@ func GetDeviceData() []byte {
 	// fmt.Println(json.Marshal(error))
 	return body
 }
-
-// func main() {
-// 	GetDeviceData()
-// }

@@ -5,7 +5,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"scryer-backend/models"
+	"scryer-backend/db/models"
 )
 
 var Instance *gorm.DB
@@ -22,4 +22,9 @@ func Migrate() {
 	fmt.Println("Starting DB Migration")
 	Instance.AutoMigrate(&models.User{})
 	fmt.Println("Finished DB Migration")
+}
+
+func RunMigrations() {
+	Connect("scryer:onestepgpsr00lz@tcp(localhost:3306)/scryer")
+	Migrate()
 }
