@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"scryer-backend/db"
+	"scryer-backend/db/migrations"
 	"scryer-backend/server"
 )
 
@@ -12,7 +12,7 @@ func main() {
 	cmd := flag.Arg(0)
 	switch cmd {
 	case "migrate":
-		db.RunMigrations()
+		migrations.Run()
 	case "server":
 		server.Run()
 	default:

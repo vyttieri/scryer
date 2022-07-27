@@ -7,12 +7,13 @@
 - Error handling for OneStepGPS API
 - Multiple `.gitignore` business
 - How to integrate JS dev server and Go? (Currently using Vite proxy request)
+- Pool or Persist MySQL Client
 
 ### Run
 - `go run main.go` or with air installed `air`
-- `npm run lint`
-- `npm run dev`
-- `mysql.server start`
+- `go run main.go -- migrate` to run DB migrations
+- `npm run dev` runs the Vite dev server
+- `mysql.server start` runs MySQL on MacOS
 
 ### Description
 
@@ -49,3 +50,4 @@
 
 ### Improvements
 - It would be great to define a more generalized API in which the client could request the specific fields they wanted to retrieve from the API. Since this project is limited in scope I opted to build an endpoint that serves exactly the data the client needs.
+- It would be best to break this out into two repositories.

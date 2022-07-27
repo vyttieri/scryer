@@ -1,7 +1,44 @@
 package models
 
+import (
+	"fmt"
+
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
+
+	client "scryer-backend/db/client"
+)
+
 type User struct {
 	ID uint `json:"id" gorm:"primary_key"`
-	Username string	`json:username" gorm:"unique"`
-	Password string `json:password"`
+	Username string	`json:"username" gorm:"unique"`
+	Password string `json:"password"`
+}
+
+// TODO: Add salt
+func (user *User) HashPassword() error {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
+
+	user.Password = string(bytes)
+	return err
+}
+
+func (user *User) CheckPassword(password string) (bool, error) {
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	return err == nil, err
+}
+
+var dbInstance *gorm.DB
+var dbError error
+func (user *User) Create() error {
+	fmt.Println("calling Create on user")
+	fmt.Println(user)
+	dbInstance = client.Connect("scryer:onestepgpsr00lz@tcp(localhost:3306)/scryer")
+
+	result := dbInstance.Create(&user)
+	if result.Error != nil {
+		panic(result.Error)
+	}
+
+	return result.Error
 }
