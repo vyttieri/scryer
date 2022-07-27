@@ -6,8 +6,6 @@
 
   const { devices, loading, error } = storeToRefs(useDeviceStore())
   const { getDeviceVisibility, setDeviceVisibility, setCenter } = usePreferencesStore()
-
-
 </script>
 
 <template>
