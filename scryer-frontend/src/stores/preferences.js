@@ -8,11 +8,7 @@ export const usePreferencesStore = defineStore({
   }),
   getters: {
     getDeviceVisibility: state => {
-      return deviceId => {
-        var device = state.devicePreferences[deviceId]
-
-        return device === undefined ? true : device.visible
-      }
+      return device => state.devicePreferences[device.device_id].visible
     },
   },
   actions: {

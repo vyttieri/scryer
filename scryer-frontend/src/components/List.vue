@@ -14,8 +14,8 @@
   <q-list bordered padding separator v-if="devices" v-for="device in devices" :key="device.device_id">
     <q-item>
       <q-item-section avatar clickable @click="setDeviceVisibility(device)">
-        <q-icon v-if="getDeviceVisibility(device.device_id)" color="primary" name="visibility" />
-        <q-icon v-if="!getDeviceVisibility(device.device_id)" color="primary" name="visibility_off" />
+        <q-icon v-if="getDeviceVisibility(device)" color="primary" name="visibility" />
+        <q-icon v-if="!getDeviceVisibility(device)" color="primary" name="visibility_off" />
       </q-item-section>
       <q-item-section avatar>
         <q-icon color="primary" name="visibility" />

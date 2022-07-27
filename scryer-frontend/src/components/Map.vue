@@ -2,8 +2,10 @@
 	import { storeToRefs } from 'pinia'
 
 	import { useDeviceStore } from '../stores/device'
+	import { usePreferencesStore } from '../stores/preferences'
+	const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
+	// const { visibleDevices } = useDeviceStore()
 
-	const { devices } =  storeToRefs(useDeviceStore())
 </script>
 
 <template>
@@ -16,7 +18,7 @@
 		<GMapMarker
 			:key="'device.device_id' + '-marker'"
 			:position="device.latest_accurate_device_point.device_point_detail.lat_lng"
-			v-for="device in devices"
+			v-for="device in visibleDevices"
 		/>
 	</GMapMap>
 

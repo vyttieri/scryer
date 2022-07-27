@@ -12,6 +12,11 @@ export const useDeviceStore = defineStore({
   getters: {
     deviceIds: state => state.devices.reduce(device => device.device_id),
     // sortedDevices: state => state.devices.sortBy((a, b) => a > b ? 1 : -1)
+    visibleDevices: state => {
+      const { getDeviceVisibility } = usePreferencesStore()
+
+      return state.devices.filter(device => getDeviceVisibility(device))
+    },
   },
   actions: {
     async fetchDevices() {
