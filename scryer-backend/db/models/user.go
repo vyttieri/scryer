@@ -9,6 +9,7 @@ import (
 	client "scryer-backend/db/client"
 )
 
+// TODO: Add index on Username
 type User struct {
 	ID uint `json:"id" gorm:"primary_key"`
 	Username string	`json:"username" gorm:"unique"`
@@ -28,14 +29,26 @@ func (user *User) CheckPassword(password string) (bool, error) {
 	return err == nil, err
 }
 
-var dbInstance *gorm.DB
+var db *gorm.DB
 var dbError error
 func (user *User) Create() error {
 	fmt.Println("calling Create on user")
 	fmt.Println(user)
-	dbInstance = client.Connect("scryer:onestepgpsr00lz@tcp(localhost:3306)/scryer")
+	// TODO: Fix DB stuff
+	db = client.Connect("scryer:onestepgpsr00lz@tcp(localhost:3306)/scryer")
 
-	result := dbInstance.Create(&user)
+	result := db.Create(&user)
+	if result.Error != nil {
+		panic(result.Error)
+	}
+
+	return result.Error
+}
+
+func (user *User) Find() error {
+	db = client.Connect("scryer:onestepgpsr00lz@tcp(localhost:3306)/scryer")
+
+	result := db.Where(&User{Username: user.Username}).First(&user)
 	if result.Error != nil {
 		panic(result.Error)
 	}
