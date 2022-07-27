@@ -9,11 +9,11 @@
 
 </script>
 
+<!-- TODO: Centering seems wrong -->
 <template>
 	<GMapMap
 		:center="center"
 		:zoom="6"
-		style="width: 100vw; height: 100%"
 	>
 		<GMapMarker
 			:key="'device.device_id' + '-marker'"
@@ -21,7 +21,6 @@
 			v-for="device in visibleDevices"
 		/>
 	</GMapMap>
-
 </template>
 
 <style scoped>
