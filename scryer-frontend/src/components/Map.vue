@@ -3,8 +3,9 @@
 
 	import { useDeviceStore } from '../stores/device'
 	import { usePreferencesStore } from '../stores/preferences'
+
 	const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
-	// const { visibleDevices } = useDeviceStore()
+	const { center } = storeToRefs(usePreferencesStore())
 
 </script>
 
@@ -25,14 +26,3 @@
 
 <style scoped>
 </style>
-
-<script>
-export default {
-	name: 'Map',
-	data() {
-		return {
-			center: { lat: 35, lng: -110 },
-		}
-	}
-}
-</script>

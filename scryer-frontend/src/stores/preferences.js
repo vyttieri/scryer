@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 export const usePreferencesStore = defineStore({
   id: 'preferences',
   state: () => ({
+    center: { lat: 35, lng: -110 },
     devicePreferences: {},
     sortColumn: 'display_name',
   }),
@@ -28,5 +29,9 @@ export const usePreferencesStore = defineStore({
       var visible = this.devicePreferences[device.device_id].visible
       this.devicePreferences[device.device_id] = { 'visible': !visible }
     },
+    setCenter(device) {
+      console.log('centering', device.latest_accurate_device_point.device_point_detail.lat_lng)
+      this.center = device.latest_accurate_device_point.device_point_detail.lat_lng
+    }
   },
 })
