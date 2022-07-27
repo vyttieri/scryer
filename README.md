@@ -46,3 +46,4 @@
 ### Limitations
 
 ### Improvements
+- It would be great to define a more generalized API in which the client could request the specific fields they wanted to retrieve from the API. Since this project is limited in scope I opted to build an endpoint that serves exactly the data the client needs.
