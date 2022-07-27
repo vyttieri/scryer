@@ -11,8 +11,7 @@
 <template>
 	<GMapMap
 		:center="center"
-		:zoom="7"
-		map-type-id="terrain"
+		:zoom="6"
 		style="width: 100vw; height: 100%"
 	>
 		<GMapMarker
@@ -32,7 +31,7 @@ export default {
 	name: 'Map',
 	data() {
 		return {
-			center: { lat: 51, lng: 7 },
+			center: { lat: 35, lng: -110 },
 		}
 	}
 }
