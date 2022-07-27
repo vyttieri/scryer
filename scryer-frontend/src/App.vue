@@ -15,7 +15,6 @@ onMounted(() => {
 
   setInterval(fetchDevices, 60000) // 60,000 ms = 1 minute
 })
-
 </script>
 
 <template>
