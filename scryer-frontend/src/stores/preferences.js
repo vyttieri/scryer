@@ -3,33 +3,34 @@ import { defineStore } from 'pinia'
 export const usePreferencesStore = defineStore({
   id: 'preferences',
   state: () => ({
-    devices: {},
+    devicePreferences: {},
+    sortColumn: 'display_name',
   }),
   getters: {
     // TODO: Compose stores instead?
     getDeviceVisibility: state => {
       return deviceId => {
-        var device = state.devices[deviceId]
+        var device = state.devicePreferences[deviceId]
 
         return device === undefined ? true : device.visible
       }
     },
-    visibleDevices(state) {
-      return state.devices.filter(device => {
-        // TODO: Better way to default visible
-        let visible = devices[device.device_id].visible
-        visible = visible == undefined ? true : visible
-        return device.visible
-      })
-    }
   },
   actions: {
+    initOrPatchDevicePreferences(devices) {
+      console.log('logging devices', devices)
+      let reducedDevices = {}
+      // TODO: use Reduce or Map or something
+      devices.forEach(device => reducedDevices[device.device_id] = { visible: true })
+      console.log('logging reducedDevices', reducedDevices)
+      this.devicePreferences = reducedDevices
+    },
     setDeviceVisibility(device) {
-      console.log('we clicked the device icon', device)
+      console.log('we clicked the device icon', device, device.device_id)
+
       // TODO: Better way to default visible
-      var devicePreferences = this.devices[device.device_id]
-      var visible = devicePreferences === undefined ? true : !devicePreferences.visible
-      this.devices[device.device_id] = { 'visible': visible }
+      var visible = this.devicePreferences[device.device_id].visible
+      this.devicePreferences[device.device_id] = { 'visible': !visible }
     },
   },
 })

@@ -10,10 +10,11 @@ import Map from './components/Map.vue'
 const { loading, error } = storeToRefs(useDeviceStore())
 const { fetchDevices }  = useDeviceStore()
 
+
 onMounted(() => {
   fetchDevices()
 
-  setInterval(fetchDevices, 60000) // 60,000 ms = 1 minute
+  setInterval(fetchDevices, 61000) // 60,000 ms = 1 minute
 })
 </script>
 
