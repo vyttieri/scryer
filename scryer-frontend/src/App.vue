@@ -4,18 +4,19 @@ import { onMounted } from 'vue'
 
 import { useDeviceStore } from './stores/device'
 
-import List from './components/List.vue'
+import Table from './components/Table.vue'
 import Map from './components/Map.vue'
 
 const { loading, error } = storeToRefs(useDeviceStore())
 const { fetchDevices }  = useDeviceStore()
 
+
 onMounted(() => {
   fetchDevices()
 
-  setInterval(fetchDevices, 60000) // 60,000 ms = 1 minute
+  // 60,000 ms = 1 minute; set interval slightly longer than server-side cache timeout ()
+  setInterval(fetchDevices, 61000)
 })
-
 </script>
 
 <template>
@@ -25,19 +26,21 @@ onMounted(() => {
     <p v-if="loading">Loading device data...</p>
     <p v-if="error">{{ error.message }}</p>
     <div id="q-app">
-      <div class="q-pa-md">
-        <div class="row">
+      <q-card>
+        <div class="row main">
           <div class="col-4">
-            <List />
+            <Table />
           </div>
           <div class="col-8">
             <Map />
           </div>
         </div>
-      </div>
+      </q-card>
     </div>
   </main>
 </template>
 
 <style scoped>
+  .q-card { height: 100vh; }
+  .main { height: 100%; }
 </style>

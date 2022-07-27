@@ -10,8 +10,6 @@ import App from './App.vue'
 
 const app = createApp(App)
 
-console.log(import.meta.env)
-
 app.use(VueGoogleMaps, {
 	load: {
 		key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY
