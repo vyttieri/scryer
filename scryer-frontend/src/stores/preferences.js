@@ -6,6 +6,7 @@ export const usePreferencesStore = defineStore({
     center: { lat: 35, lng: -110 },
     devicePreferences: {},
     sortColumn: 'display_name',
+    sortAscending: false,
   }),
   getters: {
     getDeviceVisibility: state => {
@@ -32,6 +33,9 @@ export const usePreferencesStore = defineStore({
     setCenter(device) {
       console.log('centering', device.latest_accurate_device_point.device_point_detail.lat_lng)
       this.center = device.latest_accurate_device_point.device_point_detail.lat_lng
+    },
+    setSort(column) {
+      console.log('clicked sort', column)
     }
   },
 })

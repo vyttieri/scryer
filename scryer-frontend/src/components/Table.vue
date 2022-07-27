@@ -5,15 +5,42 @@
   import { usePreferencesStore } from '../stores/preferences'
 
   const { devices, loading, error } = storeToRefs(useDeviceStore())
-  const { getDeviceVisibility, setDeviceVisibility, setCenter } = usePreferencesStore()
+  const { getDeviceVisibility, setDeviceVisibility, setCenter, setSort } = usePreferencesStore()
+
+  const columns = [
+    {
+      name: 'name',
+      field: row => row.display_name,
+      sortable: true,
+      label: 'Device Name',
+    },
+  ]
+
+  const rows = devices
+
+  // This method is used to call setSort on the preferences store
+  // in the event of a click on a column in the header row
+  const onRowClick = (event, row) => {
+    console.log(event, row)
+  }
 </script>
 
 <template>
-  <q-list bordered padding separator v-if="devices" v-for="device in devices" :key="device.device_id">
+  <q-table
+    title="GPS Devices"
+    :rows="rows"
+    :columns="columns"
+    row-key="name"
+    class="table"
+  >
+    <q-th>Sup</q-th>
+  </q-table>
+
+<!--   <q-list bordered padding separator v-if="devices" v-for="device in devices" :key="device.device_id">
     <q-item>
       <q-item-section avatar clickable @click="setDeviceVisibility(device)">
         <q-icon clickable v-if="getDeviceVisibility(device)" color="primary" name="visibility" />
-        <q-icon clickable v-if="!getDeviceVisibility(device)" color="primary" name="visibility_off" />
+        <q-icon clickable v-else color="negative" name="visibility_off" />
       </q-item-section>
       <q-item-section avatar>
         <q-icon clickable color="primary" name="my_location" @click="setCenter(device)"/>
@@ -23,7 +50,8 @@
       <q-item-section>{{ device.latest_accurate_device_point.device_state.drive_status }}</q-item-section>
     </q-item>
   </q-list>
-</template>
+ --></template>
 
 <style scoped>
+  .table { height: 100%; }
 </style>

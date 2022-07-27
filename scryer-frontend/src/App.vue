@@ -26,8 +26,8 @@ onMounted(() => {
     <p v-if="loading">Loading device data...</p>
     <p v-if="error">{{ error.message }}</p>
     <div id="q-app">
-      <div class="q-pa-md">
-        <div class="row">
+      <q-card>
+        <div class="row main">
           <div class="col-4">
             <Table />
           </div>
@@ -35,10 +35,12 @@ onMounted(() => {
             <Map />
           </div>
         </div>
-      </div>
+      </q-card>
     </div>
   </main>
 </template>
 
 <style scoped>
+  .q-card { height: 100vh; }
+  .main { height: 100%; }
 </style>

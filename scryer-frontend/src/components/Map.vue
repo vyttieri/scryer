@@ -22,6 +22,3 @@
 		/>
 	</GMapMap>
 </template>
-
-<style scoped>
-</style>

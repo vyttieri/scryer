@@ -27,6 +27,7 @@ export const useDeviceStore = defineStore({
           .then(response => response.json())
           .then(data => data.response.result_list)
 
+        // TODO: This probably isn't working as planned
         this.$patch({ devices: devices })
 
         const { initOrPatchDevicePreferences } = usePreferencesStore()
