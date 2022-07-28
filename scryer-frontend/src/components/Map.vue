@@ -9,7 +9,7 @@
 
 </script>
 
-<!-- TODO: Centering seems wrong -->
+<!-- TODO: Centering seems wrong; device_point_detail is null -->
 <template>
 	<GMapMap
 		:center="center"
@@ -17,7 +17,7 @@
 	>
 		<GMapMarker
 			:key="'device.device_id' + '-marker'"
-			:position="device.latest_accurate_device_point.device_point_detail.lat_lng"
+			:position="device.latest_device_point.lat_lng"
 			v-for="device in visibleDevices"
 		/>
 	</GMapMap>
