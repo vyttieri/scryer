@@ -15,7 +15,7 @@ export const usePreferencesStore = defineStore({
   },
   actions: {
     initOrPatchDevicePreferences(devices) {
-      console.log('logging devices', devices)
+      console.log('logging devices from preferences', devices)
       let devicePreferences = {}
       // TODO: use Reduce or Map or something
       devices.forEach(device => devicePreferences[device.device_id] = { visible: true })
