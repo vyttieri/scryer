@@ -46,44 +46,6 @@ func CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"userId": user.ID, "username": user.Username})
 }
 
-
-// type UserLoginForm struct {
-// 	Username string `json:"username" binding:"required"`
-// 	Password string `json:"password" binding:"required"`
-// }
-
-// POST /users/login
-func LoginUser(c *gin.Context) {
-	// var input UserLoginForm
-
-	// if err := c.ShouldBindJSON(&input); err != nil {
-	// 	fmt.Println(input)
-	// 	panic(err.Error())
-	// 	fmt.Println(err.Error())
-	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	// 	c.Abort()
-
-	// 	return
-	// }
-
-	// user := models.User{Username: input.Username, Password: input.Password}
-	// if err := user.HashPassword(); err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	// 	c.Abort()
-
-	// 	return
-	// }
-
-	// if err := user.Find(); err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	// 	c.Abort()
-
-	// 	return
-	// }
-
-	c.JSON(http.StatusOK, gin.H{})
-}
-
 // GET /users/:id/preferences
 func GetUserPreferences(c *gin.Context) {
 

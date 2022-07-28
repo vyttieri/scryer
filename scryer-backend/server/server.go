@@ -2,8 +2,6 @@ package server
 
 import (
 	"fmt"
-	"net/http"
-	"reflect"
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -12,73 +10,16 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"scryer-backend/db/models"
+	"scryer-backend/server/auth"
 	"scryer-backend/server/controllers"
 )
 
-var identityKey = "ID"
-
-type UserLoginForm struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
 
 func Run() {
 	r := gin.Default()
 	r.LoadHTMLFiles("templates/index.html")
 
-	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
-		Key: []byte("SECRET KEY"),
-		Timeout: time.Hour,
-		MaxRefresh: time.Hour,
-		IdentityKey: identityKey,
-		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			if v, ok := data.(*models.User); ok {
-				return jwt.MapClaims{
-					identityKey: v.ID,
-				}
-			}
-
-			return jwt.MapClaims{}
-		},
-		IdentityHandler: func(c *gin.Context) interface{} {
-			fmt.Println("Hit the IdentityHandler")
-			claims := jwt.ExtractClaims(c)
-			fmt.Println(claims)
-			fmt.Println(reflect.TypeOf(&models.User{}))
-			fmt.Println(reflect.TypeOf(claims[identityKey]))
-			return &models.User{ ID: uint(claims[identityKey].(float64)) }
-		},
-		Authenticator: func(c *gin.Context) (interface{}, error) {
-			var input UserLoginForm
-
-			if err := c.ShouldBindJSON(&input); err != nil {
-				fmt.Println(input)
-				panic(err.Error())
-				fmt.Println(err.Error())
-				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-				c.Abort()
-
-				return nil, jwt.ErrFailedAuthentication
-			}
-
-			user := models.User{Username: input.Username, Password: input.Password}
-			if err := user.HashPassword(); err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-				c.Abort()
-
-				return nil, jwt.ErrFailedAuthentication
-			}
-
-			if err := user.Find(); err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-				c.Abort()
-
-				return nil, jwt.ErrFailedAuthentication
-			}
-
-			return &models.User{ ID: user.ID }, nil
-		},
-	})
+	authMiddleware, err := auth.CreateAuthMiddleware()
 
 	if err != nil {
 		panic(err)
@@ -115,9 +56,9 @@ func Run() {
 func helloHandler(c *gin.Context) {
 	fmt.Println("hit helloHandler")
   claims := jwt.ExtractClaims(c)
-  user, _ := c.Get(identityKey)
+  user, _ := c.Get(auth.IdentityKey)
   c.JSON(200, gin.H{
-    "userID":   claims[identityKey],
+    "userID":   claims[auth.IdentityKey],
     "username": user.(*models.User).Username,
     "text":     "Hello World.",
   })
