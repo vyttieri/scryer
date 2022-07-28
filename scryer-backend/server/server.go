@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"reflect"
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -40,8 +41,12 @@ func Run() {
 			return jwt.MapClaims{}
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
+			fmt.Println("Hit the IdentityHandler")
 			claims := jwt.ExtractClaims(c)
-			return &models.User{ ID: claims[identityKey].(uint)}
+			fmt.Println(claims)
+			fmt.Println(reflect.TypeOf(&models.User{}))
+			fmt.Println(reflect.TypeOf(claims[identityKey]))
+			return &models.User{ ID: uint(claims[identityKey].(float64)) }
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			var input UserLoginForm
@@ -71,7 +76,7 @@ func Run() {
 				return nil, jwt.ErrFailedAuthentication
 			}
 
-			return &user, nil
+			return &models.User{ ID: user.ID }, nil
 		},
 	})
 
@@ -96,5 +101,24 @@ func Run() {
 	r.POST("/register", controllers.CreateUser)
 	r.POST("/login", authMiddleware.LoginHandler)
 
+	auth := r.Group("/auth")
+
+	auth.GET("/refresh_token", authMiddleware.RefreshHandler)
+	auth.Use(authMiddleware.MiddlewareFunc())
+	{
+		auth.GET("/hello", helloHandler)
+	}
+
 	r.Run()
+}
+
+func helloHandler(c *gin.Context) {
+	fmt.Println("hit helloHandler")
+  claims := jwt.ExtractClaims(c)
+  user, _ := c.Get(identityKey)
+  c.JSON(200, gin.H{
+    "userID":   claims[identityKey],
+    "username": user.(*models.User).Username,
+    "text":     "Hello World.",
+  })
 }
