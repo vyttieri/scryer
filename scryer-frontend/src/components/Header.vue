@@ -1,7 +1,12 @@
 <script setup>
+import { storeToRefs } from 'pinia'
+
+import { useAuthStore } from '../stores/auth'
+
 import Popup from './Popup.vue'
 
-
+const authStore = useAuthStore()
+const { loggedIn } = storeToRefs(authStore)
 </script>
 
 <template>
@@ -23,7 +28,8 @@ import Popup from './Popup.vue'
         </q-card>
       </q-dialog> -->a
 
-      <q-btn label="Login" color="primary" @click="$refs.dialogRef.show(); " />
+      <q-btn v-if="!loggedIn" label="Login" color="primary" @click="$refs.dialogRef.show(); " />
+      <q-btn v-if="loggedIn" label="Logout" color="primary" @click="authStore.logout()"/>
       <Popup />
     </q-toolbar>
   </q-header>

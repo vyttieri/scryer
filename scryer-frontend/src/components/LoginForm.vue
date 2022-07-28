@@ -1,15 +1,10 @@
 <script setup>
 import { useAuthStore } from '../stores/auth.js'
-
-function onSubmit(username, password) {
-  const authStore = useAuthStore()
-  console.log('subbmitted, values:', username, password)
-  authStore.login(username, password)
-}
+const authStore = useAuthStore()
 </script>
 
 <template>
-  <q-form @submit="onSubmit(username, password)">
+  <q-form @submit="authStore.login(username, password)">
     <q-input v-model="username" filled type="text" hint="Username" />
     <q-input v-model="password" filled type="password" hint="Password" />
     <q-btn label="Login" type="submit" />
