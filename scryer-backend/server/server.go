@@ -19,22 +19,21 @@ func Run() {
 	r := gin.Default()
 	r.LoadHTMLFiles("templates/index.html")
 
+	// Initialize JWT authentication module
 	authMiddleware, err := auth.CreateAuthMiddleware()
-
 	if err != nil {
 		panic(err)
 	}
-
 	errInit := authMiddleware.MiddlewareInit()
-
 	if errInit != nil {
 		panic(errInit.Error())
 	}
 
-	store := persistence.NewInMemoryStore(time.Second)
-
 	r.GET("/", controllers.Index)
 
+	// Use a simple cache for OneStepGPS API so I'm not spamming their API too much
+	// Timeout can be tailored based on use case.
+	store := persistence.NewInMemoryStore(time.Second)
 	// TODO: Change cache expiration time
 	// TODO: Error handling
 	r.GET("/ping", cache.CachePage(store, time.Hour, controllers.OneStepGpsData))
@@ -43,7 +42,6 @@ func Run() {
 	r.POST("/login", authMiddleware.LoginHandler)
 
 	auth := r.Group("/auth")
-
 	auth.GET("/refresh_token", authMiddleware.RefreshHandler)
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
