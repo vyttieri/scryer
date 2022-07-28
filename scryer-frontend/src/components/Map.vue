@@ -1,16 +1,18 @@
 <script setup>
 	import { storeToRefs } from 'pinia'
 
+	import LoginForm from './LoginForm.vue'
+
 	import { useDeviceStore } from '../stores/device'
 	import { usePreferencesStore } from '../stores/preferences'
 
 	const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
 	const { center } = storeToRefs(usePreferencesStore())
-
 </script>
 
 <!-- TODO: Centering seems wrong; device_point_detail is null -->
 <template>
+	<LoginForm />
 	<GMapMap
 		:center="center"
 		:zoom="6"

@@ -11,7 +11,6 @@ import Table from './components/Table.vue'
 const { loading, error } = storeToRefs(useDeviceStore())
 const { fetchDevices }  = useDeviceStore()
 
-
 onMounted(() => {
   fetchDevices()
 

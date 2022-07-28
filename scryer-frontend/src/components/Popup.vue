@@ -1,30 +1,58 @@
-<script setup>
-	const $q = useQuasar()
-
-	$q.dialog({
-
-	})
-</script>
-
 <template>
-  <div class="q-pa-md q-gutter-sm">
-    <q-btn label="Login" color="primary" @click="login = true" />
+    <q-dialog ref="dialogRef" @hide="onDialogHide">
+         <q-card class="q-dialog-plugin">
+          <!--
+            ...content
+            ... use q-card-section for it?
+          -->
 
-    <q-dialog v-model="login" persistent>
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">Your address</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <q-input dense v-model="address" autofocus @keyup.enter="login = false" />
-        </q-card-section>
-
-        <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn flat label="Add address" v-close-popup />
-        </q-card-actions>
-      </q-card>
+          <!-- buttons example -->
+          <q-card-actions align="right">
+            <q-btn color="primary" label="OK" @click="onOKClick" />
+            <q-btn color="primary" label="Cancel" @click="onCancelClick" />
+          </q-card-actions>
+        </q-card>
     </q-dialog>
-  </div>
 </template>
+
+<script>
+    import { useDialogPluginComponent } from 'quasar'
+
+    export default {
+        emits: [
+            ...useDialogPluginComponent.emits
+        ],
+        setup() {
+            // REQUIRED; must be called inside of setup()
+            const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
+            // dialogRef      - Vue ref to be applied to QDialog
+            // onDialogHide   - Function to be used as handler for @hide on QDialog
+            // onDialogOK     - Function to call to settle dialog with "ok" outcome
+            //                    example: onDialogOK() - no payload
+            //                    example: onDialogOK({ /*.../* }) - with payload
+            // onDialogCancel - Function to call to settle dialog with "cancel" outcome
+
+            return {
+              // This is REQUIRED;
+              // Need to inject these (from useDialogPluginComponent() call)
+              // into the vue scope for the vue html template
+              dialogRef,
+              onDialogHide,
+
+              // other methods that we used in our vue html template;
+              // these are part of our example (so not required)
+              onOKClick () {
+                console.log('sup')
+                // on OK, it is REQUIRED to
+                // call onDialogOK (with optional payload)
+                onDialogOK()
+                // or with payload: onDialogOK({ ... })
+                // ...and it will also hide the dialog automatically
+              },
+
+              // we can passthrough onDialogCancel directly
+              onCancelClick: onDialogCancel
+            }
+        }
+    }
+</script>

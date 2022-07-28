@@ -37,10 +37,12 @@ export const useDeviceStore = defineStore({
 
         const { initOrPatchDevicePreferences } = usePreferencesStore()
         initOrPatchDevicePreferences(devices)
+      } catch (error) {
+        console.log('error fetching devices', error)
+        this.error = error
       }
-      finally {
-        this.loading = false
-      }
+
+      this.loading = false
     },
   }
 })

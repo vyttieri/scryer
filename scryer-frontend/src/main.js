@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { Quasar } from 'quasar'
+import { Quasar, Dialog } from 'quasar'
 import VueGoogleMaps from '@fawmi/vue-google-maps'
 
 import '@quasar/extras/material-icons/material-icons.css'
@@ -18,7 +18,9 @@ app.use(VueGoogleMaps, {
 app.use(createPinia())
 
 app.use(Quasar, {
-	plugins: {},
+	plugins: {
+		Dialog
+	},
 })
 
 app.mount('#app')
