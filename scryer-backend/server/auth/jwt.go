@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -19,9 +20,11 @@ type userLoginForm struct {
 }
 
 func CreateAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
+	var jwtSecretKey = os.Getenv("JWT_SECRET_KEY")
+
 	// TODO: Put secret key in ENV
 	return jwt.New(&jwt.GinJWTMiddleware{
-		Key: []byte("SECRET KEY"),
+		Key: []byte(jwtSecretKey),
 		Timeout: time.Hour,
 		MaxRefresh: time.Hour,
 		IdentityKey: IdentityKey,
