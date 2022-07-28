@@ -47,39 +47,39 @@ func CreateUser(c *gin.Context) {
 }
 
 
-type UserLoginForm struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
+// type UserLoginForm struct {
+// 	Username string `json:"username" binding:"required"`
+// 	Password string `json:"password" binding:"required"`
+// }
 
 // POST /users/login
 func LoginUser(c *gin.Context) {
-	var input UserLoginForm
+	// var input UserLoginForm
 
-	if err := c.ShouldBindJSON(&input); err != nil {
-		fmt.Println(input)
-		panic(err.Error())
-		fmt.Println(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		c.Abort()
+	// if err := c.ShouldBindJSON(&input); err != nil {
+	// 	fmt.Println(input)
+	// 	panic(err.Error())
+	// 	fmt.Println(err.Error())
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// 	c.Abort()
 
-		return
-	}
+	// 	return
+	// }
 
-	user := models.User{Username: input.Username, Password: input.Password}
-	if err := user.HashPassword(); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		c.Abort()
+	// user := models.User{Username: input.Username, Password: input.Password}
+	// if err := user.HashPassword(); err != nil {
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// 	c.Abort()
 
-		return
-	}
+	// 	return
+	// }
 
-	if err := user.Find(); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		c.Abort()
+	// if err := user.Find(); err != nil {
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// 	c.Abort()
 
-		return
-	}
+	// 	return
+	// }
 
 	c.JSON(http.StatusOK, gin.H{})
 }

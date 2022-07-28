@@ -3,6 +3,7 @@ module scryer-backend
 go 1.18
 
 require (
+	github.com/appleboy/gin-jwt/v2 v2.8.0 // indirect
 	github.com/bradfitz/gomemcache v0.0.0-20220106215444-fb4bf637b56d // indirect
 	github.com/gin-contrib/cache v1.2.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -12,6 +13,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.10 // indirect
+	github.com/golang-jwt/jwt/v4 v4.2.0 // indirect
 	github.com/gomodule/redigo v1.8.9 // indirect
 	github.com/jinzhu/gorm v1.9.16 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
