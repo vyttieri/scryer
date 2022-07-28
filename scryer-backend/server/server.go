@@ -38,7 +38,7 @@ func Run() {
 	// TODO: Error handling
 	r.GET("/ping", cache.CachePage(store, time.Hour, controllers.OneStepGpsData))
 
-	r.POST("/register", controllers.CreateUser)
+	r.POST("/users", controllers.CreateUser)
 	r.POST("/login", authMiddleware.LoginHandler)
 
 	auth := r.Group("/auth")

@@ -8,14 +8,14 @@ export const useUserStore = defineStore({
 		user: {}
 	}),
 	actions: {
-		async register(username, password) {
-		 const result = await fetch('http://localhost:5173/login', {
+		async register(username, password, passwordConfirmation) {
+		 const result = await fetch('http://localhost:5173/users', {
 					method: 'POST',
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
 					},
-					body: JSON.stringify({ username: username, password: password }),
+					body: JSON.stringify({ username: username, password: password, passwordConfirmation: passwordConfirmation }),
 			})
 		 	.then(response => response.json())
 

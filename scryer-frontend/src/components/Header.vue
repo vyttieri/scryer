@@ -29,7 +29,7 @@ const { loggedIn } = storeToRefs(authStore)
       </q-dialog> -->a
 
       <q-btn v-if="!loggedIn" label="Login" color="primary" @click="$refs.dialogRef.show(); " />
-      <q-btn v-if="loggedIn" label="Logout" color="primary" @click="authStore.logout()"/>
+      <q-btn v-else label="Logout" color="primary" @click="authStore.logout()"/>
       <Popup />
     </q-toolbar>
   </q-header>

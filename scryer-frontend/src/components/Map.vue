@@ -2,6 +2,7 @@
 	import { storeToRefs } from 'pinia'
 
 	import LoginForm from './LoginForm.vue'
+	import RegistrationForm from './RegistrationForm.vue'
 
 	import { useDeviceStore } from '../stores/device'
 	import { usePreferencesStore } from '../stores/preferences'
@@ -13,6 +14,7 @@
 <!-- TODO: Centering seems wrong; device_point_detail is null -->
 <template>
 	<LoginForm />
+	<RegistrationForm />
 	<GMapMap
 		:center="center"
 		:zoom="6"
