@@ -12,8 +12,16 @@ export const useAuthStore = defineStore({
     async login(username, password) {
       this.loading = true
       try {
-        console.log('logging in')
-        const result = await fetch('http://localhost:5173/login', { method: 'POST', })
+        console.log('logging in', username, password)
+        const result = await fetch('http://localhost:5173/login', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username: username, password: password })
+        })
+
         console.log('result', result)
         this.accessToken = result.token
         console.log(result.token)
