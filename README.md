@@ -31,13 +31,15 @@
     - ~centering~
 5. ~Save user preferences on front-end~
     - SortOrder
-6. Set up user login
-    - JWT authentication on backend
+    - Groupings?
+6. ~Set up user login~
+    - ~JWT authentication on backend~
     -
-7. Save user preferences on back-end
-8. Add user-uploaded icons functionality
-9. Prettify frontend
-10. Write some tests?
+7. Create frontend views for registration/login
+8. Save user preferences on back-end
+9. Add user-uploaded icons functionality
+10. Prettify frontend
+11. Write some tests?
 
 ### Structure
 
