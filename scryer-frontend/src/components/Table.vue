@@ -87,5 +87,5 @@
  --></template>
 
 <style scoped>
-  .table { height: 100%; }
+  .table { height: 500px; width:  500px;}
 </style>

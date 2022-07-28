@@ -4,8 +4,9 @@ import { onMounted } from 'vue'
 
 import { useDeviceStore } from './stores/device'
 
-import Table from './components/Table.vue'
+import Header from './components/Header.vue'
 import Map from './components/Map.vue'
+import Table from './components/Table.vue'
 
 const { loading, error } = storeToRefs(useDeviceStore())
 const { fetchDevices }  = useDeviceStore()
@@ -25,22 +26,18 @@ onMounted(() => {
   <main>
     <p v-if="loading">Loading device data...</p>
     <p v-if="error">{{ error.message }}</p>
-    <div id="q-app">
-      <q-card>
-        <div class="row main">
-          <div class="col-4">
-            <Table />
-          </div>
-          <div class="col-8">
-            <Map />
-          </div>
-        </div>
-      </q-card>
-    </div>
+    <q-layout view="hHh lpR fFf">
+      <Header />
+      <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
+        <Table />
+      </q-drawer>
+      <q-page-container style="width:  100vw; height: 100vh;">
+        <Map />
+      </q-page-container>
+    </q-layout>
   </main>
 </template>
 
 <style scoped>
   .q-card { height: 100vh; }
-  .main { height: 100%; }
 </style>
