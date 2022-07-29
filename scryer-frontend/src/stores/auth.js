@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
 
+import { useUserStore } from './user'
+
 export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({
-    userId: localStorage.getItem('userId'),
     error: null,
     loading: false,
     accessToken: localStorage.getItem('accessToken'),
@@ -17,7 +18,7 @@ export const useAuthStore = defineStore({
       this.error = null
       try {
         console.log('logging in', username, password)
-        const result = await fetch('http://localhost:5173/login', {
+        await fetch('http://localhost:5173/login', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -26,12 +27,14 @@ export const useAuthStore = defineStore({
           body: JSON.stringify({ username: username, password: password })
         })
           .then(response => response.json())
+          .then(result => {
+            this.accessToken = result.token
 
-        console.log('result', result)
-        this.accessToken = result.token
-        this.userId = result.userId
-        localStorage.setItem('accessToken', result.token)
-        console.log(result.token)
+            localStorage.setItem('accessToken', result.token)
+            console.log(result.token)
+
+            useUserStore().getUser()
+          })
 
       } catch (error) {
         console.log('got error logging in', error)
@@ -40,8 +43,7 @@ export const useAuthStore = defineStore({
 
     },
     logout() {
-      this.user, this.accessToken = null
-      localStorage.removeItem('user')
+      this.accessToken = null
       localStorage.removeItem('accessToken')
     },
     async refreshToken() {

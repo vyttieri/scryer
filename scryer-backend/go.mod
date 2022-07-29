@@ -3,9 +3,9 @@ module scryer-backend
 go 1.18
 
 require (
-	github.com/appleboy/gin-jwt/v2 v2.8.0 // indirect
 	github.com/bradfitz/gomemcache v0.0.0-20220106215444-fb4bf637b56d // indirect
 	github.com/gin-contrib/cache v1.2.0 // indirect
+	github.com/gin-contrib/sessions v0.0.5 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.8.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
@@ -14,10 +14,14 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.10 // indirect
 	github.com/golang-jwt/jwt/v4 v4.2.0 // indirect
-	github.com/gomodule/redigo v1.8.9 // indirect
+	github.com/gomodule/redigo v2.0.0+incompatible // indirect
+	github.com/gorilla/context v1.1.1 // indirect
+	github.com/gorilla/securecookie v1.1.1 // indirect
+	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/jinzhu/gorm v1.9.16 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
