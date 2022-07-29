@@ -73,9 +73,9 @@ func Logout(c *gin.Context) {
 
 // I really dislike "Preference" vs "Preferences", they should both be "Preferences"!
 // But I think it's a necessary evil to distinguish between the singular and the plural.
-type devicePreferenceInput struct {
+type DevicePreferenceInput struct {
 	DeviceID string `json:"device_id" binding:"required"`
-	SortPosition uint `json:"sort_position" binding:"required"`
+	SortPosition uint `json:"sortPosition" binding:"required"`
 	Visible bool `json:"visible" binding:"required"`
 	Icon string `json:"icon" binding:"required"`
 }
@@ -85,7 +85,7 @@ type createUserInput struct {
 	Password string `json:"password" binding:"required"`
 	PasswordConfirmation string `json:"passwordConfirmation" binding:"required"`
 
-	DevicePreferenceInputs []devicePreferenceInput `json:"device_preferences" binding:"required"`
+	DevicePreferenceInputs []DevicePreferenceInput `json:"devicePreferences" binding:"required"`
 }
 
 // POST /users/
@@ -113,11 +113,11 @@ func CreateUser(c *gin.Context) {
 
 	// Generate DevicePreferences
 	devicePreferences := make([]models.DevicePreference, len(input.DevicePreferenceInputs))
-	for i, devicePreferenceInput := range input.DevicePreferenceInputs {
+	for i, DevicePreferenceInput := range input.DevicePreferenceInputs {
 		devicePreferences[i] = models.DevicePreference{
-			DeviceID: devicePreferenceInput.DeviceID,
-			SortPosition: devicePreferenceInput.SortPosition,
-			Icon: devicePreferenceInput.Icon,
+			DeviceID: DevicePreferenceInput.DeviceID,
+			SortPosition: DevicePreferenceInput.SortPosition,
+			Icon: DevicePreferenceInput.Icon,
 		}
 	}
 	user.DevicePreferences = devicePreferences

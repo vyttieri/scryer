@@ -15,19 +15,16 @@ const columns = [
   {
     name: 'name',
     field: row => row.display_name,
-    sortable: true,
     label: 'Device Name',
   },
   {
     name: 'active_state',
     field: row => row.active_state,
-    sortable: true,
     label: 'Active State',
   },
   {
     name: 'drive_status',
     field: row => row.latest_accurate_device_point.device_state.drive_status,
-    sortable: true,
     label: 'Drive Status',
   },
 ]

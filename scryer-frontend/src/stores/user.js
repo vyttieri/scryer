@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 
 import { useAuthStore } from '@/stores/auth'
 import { useDevicePreferencesStore } from '@/stores/devicePreferences'
@@ -11,17 +11,26 @@ export const useUserStore = defineStore({
 	}),
 	actions: {
 		async register(username, password, passwordConfirmation) {
+			let devicePreferences = storeToRefs(useDevicePreferencesStore()).devicePreferences
+			const jsonDevicePreferences = Object.keys(devicePreferences).map(deviceId => {
+				return { ...devicePreferences.deviceId, deviceId: deviceId }
+			})
+			console.log('got them devicePreferences in register', jsonDevicePreferences)
+
+			const jsonUser = {
+				username,
+				password,
+				passwordConfirmation,
+				devicePreferences: jsonDevicePreferences,
+			}
+			console.log('jsonUser', jsonUser)
 		 await fetch('http://localhost:5173/users', {
 				method: 'POST',
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({
-					username: username,
-					password: password,
-					passwordConfirmation: passwordConfirmation
-				}),
+				body: JSON.stringify(jsonUser),
 			})
 		 	.then(response => response.json())
 		 	.then(user => {
