@@ -35,7 +35,12 @@
 6. ~Set up user login~
     - ~JWT authentication on backend~
 7. ~Create frontend views for registration/login~
+    - ~Switch to using sessions. simpler.~
 8. Save user preferences on back-end
+    - Create user preferences table
+    - Send user preferences along with register action, create with user
+    - Send user preferences back with login action
+    - UPDATE user preferences on change
 9. Add user-uploaded icons functionality
 10. Prettify frontend
 11. Write some tests?
@@ -46,7 +51,7 @@
 - `npm install`
 - `ONESTEPGPS_API_KEY` needs to be set in your local `ENV`
     - `export ONESTEPGPS_API_KEY=[API_KEY]`
-- `JWT_SECRET_KEY` needs to be set in your local `ENV`; recommended 32 characters long alphanumeric randomly generated key
+- `SECRET` needs to be set in your local `ENV`; `head -c20 /dev/urandom | base64`
     - `export JWT_SECRET_KEY=[SECRET_KEY]`
 - `VITE_GOOGLE_MAPS_API_KEY` needs to be set in `scryer-frontend/.env`
 - In MySQL: `CREATE DATABASE scryer;`; `CREATE USER 'scryer'@'localhost' IDENTIFIED BY 'onestepgpsr00lz';` `GRANT ALL PRIVILEGES ON scryer.* TO 'scryer'@'localhost' WITH GRANT OPTION;`
