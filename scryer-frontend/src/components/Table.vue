@@ -5,11 +5,13 @@
   import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
   const { devices, loading, error } = storeToRefs(useDeviceStore())
-  const { getDeviceVisibility, setDeviceVisibility, setCenter, setSort } = useDevicePreferencesStore()
+  const { getDeviceVisibility, setDeviceVisibility, getDeviceIcon } = useDevicePreferencesStore()
+  console.log('got some deviceIcon', getDeviceIcon)
 
   const columns = [
     { name: 'visible', required: false },
     { name: 'center' , required: false },
+    { name: 'icon', required: true },
     {
       name: 'name',
       field: row => row.display_name,
@@ -55,6 +57,9 @@
         </q-td>
         <q-td key="icon">
           <q-icon clickable color="primary" name="my_location" @click="setCenter(props.row)"/>
+        </q-td>
+        <q-td key="icon">
+          <q-icon clickable color="primary" :name="getDeviceIcon(props.row)" />
         </q-td>
         <q-td key="name" :props="props">
           {{ props.row.display_name }}

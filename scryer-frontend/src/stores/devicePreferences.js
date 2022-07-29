@@ -2,15 +2,26 @@ import { defineStore } from 'pinia'
 
 export const useDevicePreferencesStore = defineStore({
   id: 'devicePreferences',
-  state: () => {
-    devicePreferences: {}
-  },
+  state: () => ({
+    devicePreferences: {
+      // visible: true, icon: 'car', sortPosition: 1
+    }
+  }),
   getters: {
     getDeviceVisibility: state => {
       return device => {
-        console.log('getting device visibility', device)
-        console.log('fucking state', state)
         return state.devicePreferences[device.device_id].visible
+      }
+    },
+    // this maps from simple names to material ui icon names
+    getDeviceIcon: state => {
+      return device => {
+        const icon = state.devicePreferences[device.device_id].icon
+
+        if (icon === 'car') return 'directions_car'
+        else if (icon === 'truck') return 'local_shipping'
+        else if (icon === 'scooter') return 'delivery_dining'
+        else if (icon === 'motorcycle') return 'two_wheeler'
       }
     },
   },
@@ -19,7 +30,7 @@ export const useDevicePreferencesStore = defineStore({
       console.log('logging devices from preferences', devices)
 
       let devicePreferences = devices.reduce((acc, device) => {
-        return { ...acc, [device.device_id]: { visible: true } }
+        return { ...acc, [device.device_id]: { visible: true, icon: 'car' } }
       }, {})
 
       // spread will overwrite with second object, so we're effectively only adding new devices
@@ -30,7 +41,7 @@ export const useDevicePreferencesStore = defineStore({
       console.log('we clicked the device icon', device, device.device_id)
 
       var visible = this.devicePreferences[device.device_id].visible
-      this.devicePreferences[device.device_id] = { 'visible': !visible }
+      this.devicePreferences[device.device_id].visible = !visible
     },
   },
 })
