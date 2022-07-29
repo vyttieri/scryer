@@ -38,7 +38,7 @@
     - ~Switch to using sessions. simpler.~
 75.
     - rejig frontend device preferences:
-    - - visible
+    - - ~visible~
     - - icon
     - - sortPosition
 8. Save user preferences on back-end
