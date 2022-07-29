@@ -34,8 +34,7 @@
     - Groupings?
 6. ~Set up user login~
     - ~JWT authentication on backend~
-    -
-7. Create frontend views for registration/login
+7. ~Create frontend views for registration/login~
 8. Save user preferences on back-end
 9. Add user-uploaded icons functionality
 10. Prettify frontend
