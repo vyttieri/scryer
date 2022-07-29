@@ -73,24 +73,25 @@ func Logout(c *gin.Context) {
 
 // I really dislike "Preference" vs "Preferences", they should both be "Preferences"!
 // But I think it's a necessary evil to distinguish between the singular and the plural.
-type DevicePreferenceInput struct {
+type devicePreferenceInput struct {
 	DeviceID string `json:"device_id" binding:"required"`
 	SortPosition uint `json:"sort_position" binding:"required"`
 	Visible bool `json:"visible" binding:"required"`
 	Icon string `json:"icon" binding:"required"`
 }
 
-type CreateUserInput struct {
+type createUserInput struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 	PasswordConfirmation string `json:"passwordConfirmation" binding:"required"`
 
-	DevicePreferenceInputs []DevicePreferenceInput `json:"device_preferences" binding:"required"`
+	DevicePreferenceInputs []devicePreferenceInput `json:"device_preferences" binding:"required"`
 }
 
 // POST /users/
 func CreateUser(c *gin.Context) {
-	var input CreateUserInput
+	var input createUserInput
+	// Ensure we have all the required fields
 	if err := c.ShouldBindJSON(&input); err != nil {
 		fmt.Println(input)
 		panic(err.Error())
@@ -101,6 +102,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	// Hash password
 	user := models.User{Username: input.Username, Password: input.Password}
 	if err := user.HashPassword(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -109,12 +111,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-
-	/*  This what I've decided here: I think the shape of the input is the concern of the controller.
-		Once it's been validated, the controller formats the data into the shape the model understands and needs for DB creation.
-		hence why I'm converting these from DevicePreferenceInputs (input format) to DevicePreferences (model)
-	*/
-
+	// Generate DevicePreferences
 	devicePreferences := make([]models.DevicePreference, len(input.DevicePreferenceInputs))
 	for i, devicePreferenceInput := range input.DevicePreferenceInputs {
 		devicePreferences[i] = models.DevicePreference{
@@ -123,15 +120,18 @@ func CreateUser(c *gin.Context) {
 			Icon: devicePreferenceInput.Icon,
 		}
 	}
+	user.DevicePreferences = devicePreferences
 
-	if err := user.CreateWithPreferences(&devicePreferences); err != nil {
+	// Create User & DevicePreferences in DB
+	if err := user.Create(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		c.Abort()
 
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"userId": user.ID, "username": user.Username})
+	// Good job team
+	c.JSON(http.StatusCreated, gin.H{"user": user})
 }
 
 // PUT /users/:id/preferences
