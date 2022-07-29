@@ -24,6 +24,5 @@ func LoadEnv() {
 	DbUser = os.Getenv("DB_USER")
 	DbUserPassword = os.Getenv("DB_USER_PASSWORD")
 
-	fmt.Println(ApiKey)
 	fmt.Println("Environment loaded")
 }

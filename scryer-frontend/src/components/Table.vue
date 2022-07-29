@@ -1,44 +1,44 @@
 <script setup>
-  import { storeToRefs } from 'pinia'
+import { storeToRefs } from 'pinia'
 
-  import { useDeviceStore } from '@/stores/device'
-  import { useDevicePreferencesStore } from '@/stores/devicePreferences'
+import { useDeviceStore } from '@/stores/device'
+import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
-  const { devices, loading, error } = storeToRefs(useDeviceStore())
-  const { getDeviceVisibility, setDeviceVisibility, getDeviceIcon } = useDevicePreferencesStore()
-  console.log('got some deviceIcon', getDeviceIcon)
+const { devices, loading, error } = storeToRefs(useDeviceStore())
+const { getDeviceVisibility, setDeviceVisibility, getDeviceIcon } = useDevicePreferencesStore()
+console.log('got some deviceIcon', getDeviceIcon)
 
-  const columns = [
-    { name: 'visible', required: false },
-    { name: 'center' , required: false },
-    { name: 'icon', required: true },
-    {
-      name: 'name',
-      field: row => row.display_name,
-      sortable: true,
-      label: 'Device Name',
-    },
-    {
-      name: 'active_state',
-      field: row => row.active_state,
-      sortable: true,
-      label: 'Active State',
-    },
-    {
-      name: 'drive_status',
-      field: row => row.latest_accurate_device_point.device_state.drive_status,
-      sortable: true,
-      label: 'Drive Status',
-    },
-  ]
+const columns = [
+  { name: 'visible', required: false },
+  { name: 'center' , required: false },
+  { name: 'icon', required: true },
+  {
+    name: 'name',
+    field: row => row.display_name,
+    sortable: true,
+    label: 'Device Name',
+  },
+  {
+    name: 'active_state',
+    field: row => row.active_state,
+    sortable: true,
+    label: 'Active State',
+  },
+  {
+    name: 'drive_status',
+    field: row => row.latest_accurate_device_point.device_state.drive_status,
+    sortable: true,
+    label: 'Drive Status',
+  },
+]
 
-  const rows = devices
+const rows = devices
 
-  // This method is used to call setSort on the preferences store
-  // in the event of a click on a column in the header row
-  const onRowClick = (event, row) => {
-    console.log(event, row)
-  }
+// This method is used to call setSort on the preferences store
+// in the event of a click on a column in the header row
+const onRowClick = (event, row) => {
+  console.log(event, row)
+}
 </script>
 
 <template>
@@ -56,7 +56,7 @@
           <q-icon v-else color="negative" name="visibility_off" />
         </q-td>
         <q-td key="icon">
-          <q-icon clickable color="primary" name="my_location" @click="setCenter(props.row)"/>
+          <q-icon clickable color="primary" name="my_location" @click="$emit('set-center', props.row.latest_accurate_device_point.device_point_detail.lat_lng)" />
         </q-td>
         <q-td key="icon">
           <q-icon clickable color="primary" :name="getDeviceIcon(props.row)" />
@@ -94,3 +94,17 @@
 <style scoped>
   .table { height: 500px; width:  500px;}
 </style>
+
+<script>
+export default {
+  props: {
+    center: {
+      type: String,
+      required: true,
+      // validator(value) {
+      //   return 'lat' in value &&'lng' in value && typeof(value[lat]) === 'string' && typeof(value[lng)]) === 'string'
+      // }
+    },
+  }
+}
+</script>

@@ -10,10 +10,21 @@ import (
 	"scryer-backend/db/models"
 )
 
-type UserCreateForm struct {
+// I really dislike "Preference" vs "Preferences", they should both be "Preferences"!
+// But I think it's a necessary evil to distinguish between the singular and the plural.
+type DevicePreferenceInput struct {
+	DeviceID string `json:"device_id" binding:"required"`
+	SortPosition uint `json:"sort_position" binding:"required"`
+	Visible bool `json:"visible" binding:"required"`
+	Icon string `json:"icon" binding:"required"`
+}
+
+type createUserInput struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 	PasswordConfirmation string `json:"passwordConfirmation" binding:"required"`
+
+	DevicePreferences []DevicePreferenceInput `json:"device_preferences" binding:"required"`
 }
 
 type userLoginForm struct {
@@ -76,9 +87,9 @@ func Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// POST /users/register
+// POST /users/
 func CreateUser(c *gin.Context) {
-	var input UserCreateForm
+	var input createUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		fmt.Println(input)
 		panic(err.Error())
@@ -105,21 +116,6 @@ func CreateUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"userId": user.ID, "username": user.Username})
-}
-
-// GET /users/:id
-// Return a user along with their preferences.
-func GetUser(c *gin.Context) {
-	fmt.Println("hit GetUser")
-
-	session := sessions.Default(c)
-	user := session.Get("ID")
-
-	c.JSON(200, gin.H{
-		"userID": user.(*models.User).ID,
-		"username": user.(*models.User).Username,
-	})
-
 }
 
 // PUT /users/:id/preferences
