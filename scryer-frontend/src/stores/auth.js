@@ -1,6 +1,7 @@
 import { defineStore, storeToRefs } from 'pinia'
 
-import { useUserStore } from './user'
+import { useDevicePreferencesStore } from '@/stores/devicePreferences'
+import { useUserStore } from '@/stores/user'
 
 export const useAuthStore = defineStore({
   id: 'auth',
@@ -23,8 +24,24 @@ export const useAuthStore = defineStore({
           body: JSON.stringify({ username: username, password: password })
         })
           .then(response => response.json())
-          .then(user => {
-            useUserStore().setUser(user.userId, user.username)
+          .then(data => {
+            console.log(data.user)
+            useUserStore().setUser(data.user.userId, data.user.username)
+
+            // convert from backend [] format to frontend {} format
+            const devicePreferences = data.user.devicePreferences.reduce((acc, devicePreference) => {
+                    return {
+                      ...acc,
+                      [devicePreference.deviceId]: {
+                        icon: devicePreference.icon,
+                        sortOrder: devicePreference.sortOrder,
+                        visible: devicePreference.visible,
+                      }
+                    }
+                  },
+            {})
+            console.log('setting devicePreferences with:', devicePreferences)
+            useDevicePreferencesStore().setDevicePreferences(devicePreferences)
           })
 
       } catch (error) {

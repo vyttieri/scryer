@@ -49,5 +49,8 @@ export const useDevicePreferencesStore = defineStore({
       var visible = this.devicePreferences[device.device_id].visible
       this.devicePreferences[device.device_id].visible = !visible
     },
+    setDevicePreferences(devicePreferences) {
+      this.devicePreferences = devicePreferences
+    }
   },
 })
