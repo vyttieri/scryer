@@ -4,10 +4,10 @@
 
 ### TODO
 - Make `golangci-lint` run properly in SublimeText
-- Error handling for OneStepGPS API
+- Error Handling (api, application, frontend); Data Validation (db, application, frontend)
 - Multiple `.gitignore` business
 - How to integrate JS dev server and Go? (Currently using Vite proxy request)
-- Pool or Persist MySQL Client
+- ~Pool or Persist MySQL Client~; How does this work with multiple connections?
 
 ### Run
 - `go run main.go` or with air installed `air`
@@ -36,14 +36,17 @@
     - ~JWT authentication on backend~
 7. ~Create frontend views for registration/login~
     - ~Switch to using sessions. simpler.~
+75.
+    - rejig frontend device preferences:
+    - - visible
+    - - icon
+    - - sortPosition
 8. Save user preferences on back-end
     - Create user preferences table
     - Send user preferences along with register action, create with user
     - Send user preferences back with login action
     - UPDATE user preferences on change
-9. Add user-uploaded icons functionality
-10. Prettify frontend
-11. Write some tests?
+9. Prettify frontend
 
 ### Structure
 
