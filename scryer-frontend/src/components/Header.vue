@@ -1,13 +1,10 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 
-import { useAuthStore } from '../stores/auth'
-import { useUserStore } from '../stores/user'
+import { useUserStore } from '@/stores/user'
 
-import Popup from './Popup.vue'
+import Popup from '@/components/Popup.vue'
 
-const authStore = useAuthStore()
-const { loggedIn } = storeToRefs(authStore)
 const userStore = useUserStore()
 const { username } = storeToRefs(userStore)
 </script>
@@ -19,7 +16,7 @@ const { username } = storeToRefs(userStore)
           <q-avatar>
             <img src="../../../scryer.png" />
           </q-avatar>
-          <p v-if="loggedIn">Welcome to Scryer, {{username}}!</p>
+          <p v-if="username !== null">Welcome to Scryer, {{username}}!</p>
           <p v-else>Welcome to Scryer!</p>
         </q-toolbar-title>
 
@@ -32,7 +29,7 @@ const { username } = storeToRefs(userStore)
         </q-card>
       </q-dialog> -->a
 
-      <q-btn v-if="!loggedIn" label="Login" color="primary" @click="$refs.dialogRef.show(); " />
+      <q-btn v-if="username !== null" label="Login" color="primary" @click="$refs.dialogRef.show(); " />
       <q-btn v-else label="Logout" color="primary" @click="authStore.logout()"/>
       <Popup />
     </q-toolbar>

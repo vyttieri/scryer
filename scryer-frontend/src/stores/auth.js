@@ -8,16 +8,6 @@ export const useAuthStore = defineStore({
     error: null,
     loading: false,
   }),
-  getters: {
-    // Data should have a single source of truth,
-    // and I'm trying to follow the single responsibility principle...
-    // so that's why this is a bit weird.
-    loggedIn: state => {
-      const { userId } = storeToRefs(useUserStore())
-
-      return userId === '' ? false : true
-    }
-  },
   actions: {
     async login(username, password) {
       this.loading = true

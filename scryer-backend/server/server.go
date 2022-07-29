@@ -39,12 +39,13 @@ func Run() {
 	// TODO: Error handling
 	router.GET("/ping", cache.CachePage(store, time.Hour, controllers.OneStepGpsData))
 
+	router.POST("/users", controllers.CreateUser)
+	router.POST("/login", controllers.Login)
+
 	private := router.Group("/")
 	private.Use(AuthRequired)
 	private.GET("/logout", controllers.Logout)
 
-	router.POST("/users", controllers.CreateUser)
-	router.POST("/login", controllers.Login)
 
 	router.Run()
 }
