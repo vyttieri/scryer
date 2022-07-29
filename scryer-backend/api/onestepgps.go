@@ -8,9 +8,10 @@ import (
 	"scryer-backend/env"
 )
 
-var url = fmt.Sprintf("https://track.onestepgps.com/v3/api/public/device?latest_point=true&api-key=%s", env.ApiKey)
 
 func GetDeviceData() []byte {
+	var url = fmt.Sprintf("https://track.onestepgps.com/v3/api/public/device?latest_point=true&api-key=%s", env.ApiKey)
+
 	fmt.Println("starting onestepgps GET")
 	fmt.Printf("getting URL %s", url)
 	response, error := http.Get(url)
