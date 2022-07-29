@@ -1,70 +1,50 @@
 package server
 
 import (
-	"fmt"
+	"net/http"
 	"time"
 
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-contrib/cache"
 	"github.com/gin-contrib/cache/persistence"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 
-	"scryer-backend/db/models"
-	"scryer-backend/server/auth"
 	"scryer-backend/server/controllers"
 )
 
+func AuthRequired(c *gin.Context) {
+	session := sessions.Default(c)
+	user := session.Get("user")
+	if user == nil {
+		c.JSON(http.StatusUnauthorized, gin.H{})
+		c.Abort()
+
+		panic("User is not logged in")
+	}
+}
 
 func Run() {
-	r := gin.Default()
-	r.LoadHTMLFiles("templates/index.html")
+	router := gin.Default()
+	router.LoadHTMLFiles("templates/index.html")
 
-	// Initialize JWT authentication module
-	authMiddleware, err := auth.CreateAuthMiddleware()
-	if err != nil {
-		panic(err)
-	}
-	errInit := authMiddleware.MiddlewareInit()
-	if errInit != nil {
-		panic(errInit.Error())
-	}
+	router.Use(sessions.Sessions("session", cookie.NewStore([]byte("SECRETMOVEELSEWHERE"))))
 
-	r.GET("/", controllers.Index)
+	router.GET("/", controllers.Index)
 
 	// Use a simple cache for OneStepGPS API so I'm not spamming their API too much
 	// Timeout can be tailored based on use case.
 	store := persistence.NewInMemoryStore(time.Second)
 	// TODO: Change cache expiration time
 	// TODO: Error handling
-	r.GET("/ping", cache.CachePage(store, time.Hour, controllers.OneStepGpsData))
+	router.GET("/ping", cache.CachePage(store, time.Hour, controllers.OneStepGpsData))
 
-	r.POST("/users", controllers.CreateUser)
-	r.POST("/login", authMiddleware.LoginHandler)
+	private := router.Group("/")
+	private.Use(AuthRequired)
 
-	auth := r.Group("/auth")
-	auth.GET("/refresh_token", authMiddleware.RefreshHandler)
-	auth.Use(authMiddleware.MiddlewareFunc())
-	{
-		auth.GET("/hello", helloHandler)
-	}
 
-	users := r.Group("/users")
-	users.Use(authMiddleware.MiddlewareFunc())
-	{
-		auth.GET("/:id", controllers.GetUser)
-	}
+	router.POST("/users", controllers.CreateUser)
+	router.POST("/login", controllers.Login)
 
-	r.Run()
-}
-
-func helloHandler(c *gin.Context) {
-	fmt.Println("hit helloHandler")
-  claims := jwt.ExtractClaims(c)
-  user, _ := c.Get(auth.IdentityKey)
-  fmt.Println(user)
-  c.JSON(200, gin.H{
-    "userID":   claims[auth.IdentityKey],
-    "username": user.(*models.User).Username,
-    "text":     "Hello World.",
-  })
+	router.Run()
 }
