@@ -45,7 +45,18 @@ func (user *User) Create() error {
 	return result.Error
 }
 
-func (user *User) Find() error {
+func (user *User) FindByID() error {
+	db = client.Connect("scryer:onestepgpsr00lz@tcp(localhost:3306)/scryer")
+
+	result := db.Where(&User{Username: user.Username}).First(&user)
+	if result.Error != nil {
+		panic(result.Error)
+	}
+
+	return result.Error
+}
+
+func (user *User) FindByUsername() error {
 	db = client.Connect("scryer:onestepgpsr00lz@tcp(localhost:3306)/scryer")
 
 	result := db.Where(&User{Username: user.Username}).First(&user)

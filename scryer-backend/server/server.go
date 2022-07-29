@@ -55,6 +55,7 @@ func helloHandler(c *gin.Context) {
 	fmt.Println("hit helloHandler")
   claims := jwt.ExtractClaims(c)
   user, _ := c.Get(auth.IdentityKey)
+  fmt.Println(user)
   c.JSON(200, gin.H{
     "userID":   claims[auth.IdentityKey],
     "username": user.(*models.User).Username,

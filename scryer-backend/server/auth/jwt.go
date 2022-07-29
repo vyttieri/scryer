@@ -40,7 +40,9 @@ func CreateAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
 
-			return &models.User{ ID: uint(claims[IdentityKey].(float64)) }
+			user := models.User{ID: uint(claims[IdentityKey].(float64))}
+			user.FindByID()
+			return &user
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			var input userLoginForm
@@ -63,14 +65,15 @@ func CreateAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 				return nil, jwt.ErrFailedAuthentication
 			}
 
-			if err := user.Find(); err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			if err := user.FindByUsername(); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 				c.Abort()
 
 				return nil, jwt.ErrFailedAuthentication
 			}
-
-			return &models.User{ ID: user.ID }, nil
+			fmt.Println("Authenticated, userId")
+			fmt.Println(user.ID)
+			return &user, nil
 		},
 	})
 }
