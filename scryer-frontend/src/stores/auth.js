@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 
 import { useUserStore } from './user'
 
@@ -7,10 +7,16 @@ export const useAuthStore = defineStore({
   state: () => ({
     error: null,
     loading: false,
-    accessToken: localStorage.getItem('accessToken'),
   }),
   getters: {
-    loggedIn: state => state.accessToken !== null
+    // Data should have a single source of truth,
+    // and I'm trying to follow the single responsibility principle...
+    // so that's why this is a bit weird.
+    loggedIn: state => {
+      const { userId } = storeToRefs(useUserStore())
+
+      return userId === '' ? false : true
+    }
   },
   actions: {
     async login(username, password) {
@@ -27,31 +33,31 @@ export const useAuthStore = defineStore({
           body: JSON.stringify({ username: username, password: password })
         })
           .then(response => response.json())
-          .then(result => {
-            this.accessToken = result.token
-
-            localStorage.setItem('accessToken', result.token)
-            console.log(result.token)
-
-            useUserStore().getUser()
+          .then(user => {
+            useUserStore().setUser(user.userId, user.username)
           })
 
       } catch (error) {
         console.log('got error logging in', error)
         this.error = error
       }
-
     },
-    logout() {
-      this.accessToken = null
-      localStorage.removeItem('accessToken')
-    },
-    async refreshToken() {
+    async logout() {
       try {
-        const accessToken = await fetch('http://localhost:5173/auth/refresh_token')
-      } catch (error) {
-
-      }
-    }
+          console.log('logging out')
+          await fetch('http://localhost:5173/logout')
+            .then(response => {
+              if (response.status === 200) {
+                useUserStore().setUser(null, null)
+                console.log('successfully logged out')
+              } else {
+                // panic at the disco
+              }
+            })
+        } catch (error) {
+          console.log('got error logging in', error)
+          this.error = error
+        }
+    },
   }
 })

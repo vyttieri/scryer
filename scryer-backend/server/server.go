@@ -15,7 +15,7 @@ import (
 
 func AuthRequired(c *gin.Context) {
 	session := sessions.Default(c)
-	user := session.Get("user")
+	user := session.Get("ID")
 	if user == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{})
 		c.Abort()
@@ -41,7 +41,7 @@ func Run() {
 
 	private := router.Group("/")
 	private.Use(AuthRequired)
-
+	private.GET("/logout", controllers.Logout)
 
 	router.POST("/users", controllers.CreateUser)
 	router.POST("/login", controllers.Login)

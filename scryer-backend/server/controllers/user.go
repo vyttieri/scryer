@@ -50,11 +50,30 @@ func Login(c *gin.Context) {
 	}
 
 	session := sessions.Default(c)
-	session.Set("ID", user.Username)
+	session.Set("ID", user.ID)
+	if err := session.Save(); err != nil {
+		fmt.Println("Failed to login", err)
+		panic(err)
+	}
+
 
 	c.JSON(http.StatusOK, gin.H{"userId": user.ID, "username": user.Username })
 	fmt.Println("Authenticated, userId")
 	fmt.Println(user.ID)
+}
+
+func Logout(c *gin.Context) {
+	session := sessions.Default(c)
+
+	session.Delete("ID")
+	if err := session.Save(); err != nil {
+		fmt.Println("Failed to logout", err)
+		panic(err)
+
+		c.JSON(http.StatusInternalServerError, gin.H{})
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 // POST /users/register
