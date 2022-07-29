@@ -38,7 +38,7 @@ func Run() {
 	// TODO: Error handling
 	r.GET("/ping", cache.CachePage(store, time.Hour, controllers.OneStepGpsData))
 
-	r.POST("/register", controllers.CreateUser)
+	r.POST("/users", controllers.CreateUser)
 	r.POST("/login", authMiddleware.LoginHandler)
 
 	auth := r.Group("/auth")
@@ -55,6 +55,7 @@ func helloHandler(c *gin.Context) {
 	fmt.Println("hit helloHandler")
   claims := jwt.ExtractClaims(c)
   user, _ := c.Get(auth.IdentityKey)
+  fmt.Println(user)
   c.JSON(200, gin.H{
     "userID":   claims[auth.IdentityKey],
     "username": user.(*models.User).Username,

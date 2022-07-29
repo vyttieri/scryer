@@ -29,3 +29,8 @@ func GetDeviceData() []byte {
 	// fmt.Println(json.Marshal(error))
 	return body
 }
+
+// TODO: Only send data to front-end that it needs.
+// Error frontend: device.latest_accurate_device_point.lat_lng "latest_accurate_device_point" is null
+// should probably display updated_at on the frontend
+// One time
