@@ -4,10 +4,13 @@ import (
 	"flag"
 
 	"scryer-backend/db/migrations"
+	"scryer-backend/env"
 	"scryer-backend/server"
 )
 
 func main() {
+	env.LoadEnv()
+
 	flag.Parse()
 	cmd := flag.Arg(0)
 	switch cmd {

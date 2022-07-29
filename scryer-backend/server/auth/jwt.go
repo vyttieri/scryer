@@ -3,13 +3,13 @@ package auth
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 
 	"scryer-backend/db/models"
+	"scryer-backend/env"
 )
 
 var IdentityKey = "ID"
@@ -20,11 +20,9 @@ type userLoginForm struct {
 }
 
 func CreateAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
-	var jwtSecretKey = os.Getenv("JWT_SECRET_KEY")
-
 	// TODO: Put secret key in ENV
 	return jwt.New(&jwt.GinJWTMiddleware{
-		Key: []byte(jwtSecretKey),
+		Key: []byte(env.JwtSecretKey),
 		Timeout: time.Hour,
 		MaxRefresh: time.Hour,
 		IdentityKey: IdentityKey,

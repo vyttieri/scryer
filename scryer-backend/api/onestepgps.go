@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
+
+	"scryer-backend/env"
 )
 
-var apiKey = os.Getenv("ONESTEPGPS_API_KEY")
-var url = fmt.Sprintf("https://track.onestepgps.com/v3/api/public/device?latest_point=true&api-key=%s", apiKey)
+var url = fmt.Sprintf("https://track.onestepgps.com/v3/api/public/device?latest_point=true&api-key=%s", env.ApiKey)
 
 func GetDeviceData() []byte {
 	fmt.Println("starting onestepgps GET")

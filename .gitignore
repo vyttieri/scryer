@@ -27,3 +27,4 @@ Temporary Items
 
 # Go
 scryer-backend/tmp/
+scryer-backend/.env
