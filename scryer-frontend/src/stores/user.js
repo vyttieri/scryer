@@ -5,7 +5,8 @@ import { useAuthStore } from './auth'
 export const useUserStore = defineStore({
 	id: 'user',
 	state: () => ({
-		user: {}
+		userId: '',
+		username: ''
 	}),
 	actions: {
 		async register(username, password, passwordConfirmation) {
@@ -20,6 +21,8 @@ export const useUserStore = defineStore({
 		 	.then(response => response.json())
 
 		 console.log('result', result)
+		 this.userId = result.userId
+		 this.username = result.username
 
 		 const authResult = useAuthStore().login(username, password)
 		},

@@ -2,11 +2,14 @@
 import { storeToRefs } from 'pinia'
 
 import { useAuthStore } from '../stores/auth'
+import { useUserStore } from '../stores/user'
 
 import Popup from './Popup.vue'
 
 const authStore = useAuthStore()
 const { loggedIn } = storeToRefs(authStore)
+const userStore = useUserStore()
+const { username } = storeToRefs(userStore)
 </script>
 
 <template>
@@ -16,7 +19,8 @@ const { loggedIn } = storeToRefs(authStore)
           <q-avatar>
             <img src="../../../scryer.png" />
           </q-avatar>
-          Scryer: Your portal to the future
+          <p v-if="loggedIn">Welcome to Scryer, {{username}}!</p>
+          <p v-else>Welcome to Scryer!</p>
         </q-toolbar-title>
 
 <!--         <q-btn icon="login" color="secondary" @click="prompt = true" />
