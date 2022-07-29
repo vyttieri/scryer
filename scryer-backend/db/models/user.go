@@ -9,11 +9,12 @@ import (
 	database "scryer-backend/db"
 )
 
-// TODO: Add index on Username
 type User struct {
-	ID uint `json:"id" gorm:"primary_key"`
-	Username string	`json:"username" gorm:"unique"`
-	Password string `json:"password"`
+	ID uint `json:"id" gorm:"primaryKey"`
+	Username string	`json:"username" gorm:"index:,unique,class:VARCHAR(24)"`
+	Password string `json:"password" gorm:"type:varchar(64)"`
+
+	DevicePreferences []DevicePreference
 }
 
 // TODO: Add salt
