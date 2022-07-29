@@ -67,10 +67,10 @@ func Logout(c *gin.Context) {
 
 	session.Delete("ID")
 	if err := session.Save(); err != nil {
-		fmt.Println("Failed to logout", err)
+		fmt.Println("Failed to save session", err)
 		panic(err)
 
-		c.JSON(http.StatusInternalServerError, gin.H{})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 	}
 
 	c.JSON(http.StatusOK, gin.H{})

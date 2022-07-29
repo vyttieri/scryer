@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-contrib/cache"
@@ -28,7 +29,7 @@ func Run() {
 	router := gin.Default()
 	router.LoadHTMLFiles("templates/index.html")
 
-	router.Use(sessions.Sessions("session", cookie.NewStore([]byte("SECRETMOVEELSEWHERE"))))
+	router.Use(sessions.Sessions("session", cookie.NewStore([]byte(os.Getenv("SESSION_SECRET")))))
 
 	router.GET("/", controllers.Index)
 
@@ -45,7 +46,6 @@ func Run() {
 	private := router.Group("/")
 	private.Use(AuthRequired)
 	private.GET("/logout", controllers.Logout)
-
 
 	router.Run()
 }
