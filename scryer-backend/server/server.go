@@ -48,6 +48,12 @@ func Run() {
 		auth.GET("/hello", helloHandler)
 	}
 
+	users := r.Group("/users")
+	users.Use(authMiddleware.MiddlewareFunc())
+	{
+		auth.GET("/:id", controllers.GetUser)
+	}
+
 	r.Run()
 }
 

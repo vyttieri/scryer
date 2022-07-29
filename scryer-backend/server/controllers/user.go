@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"net/http"
 
+	// jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 
 	"scryer-backend/db/models"
+	"scryer-backend/server/auth"
 )
 
 type UserCreateForm struct {
@@ -46,13 +48,17 @@ func CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"userId": user.ID, "username": user.Username})
 }
 
-// GET /users/:id/preferences
-func GetUserPreferences(c *gin.Context) {
+// GET /users/:id
+// Return a user along with their preferences.
+func GetUser(c *gin.Context) {
+	fmt.Println("hit GetUser")
 
-}
+	user, _ := c.Get(auth.IdentityKey)
 
-// POST /users/:id/preferences
-func CreateUserPreferences(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"userID": user.(*models.User).ID,
+		"username": user.(*models.User).Username,
+	})
 
 }
 

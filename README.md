@@ -52,7 +52,8 @@
 - In MySQL: `CREATE DATABASE scryer;`; `CREATE USER 'scryer'@'localhost' IDENTIFIED BY 'onestepgpsr00lz';` `GRANT ALL PRIVILEGES ON scryer.* TO 'scryer'@'localhost' WITH GRANT OPTION;`
 
 ### Limitations
+- Sending password over HTTP isn't great, would like to use SSL
+- JWT stored in localStorage is vulnerable to malicious JS. Worth considering other methods of storage.
 
 ### Improvements
 - It would be great to define a more generalized API in which the client could request the specific fields they wanted to retrieve from the API. Since this project is limited in scope I opted to build an endpoint that serves exactly the data the client needs.
-- It would be best to break this out into two repositories.
