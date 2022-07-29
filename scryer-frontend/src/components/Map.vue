@@ -22,7 +22,7 @@ const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
 			:key="device.device_id + '-marker'"
 			v-for="device in visibleDevices"
 			:position="device.latest_accurate_device_point.device_point_detail.lat_lng"
-			@click="$emit('set-center', props.row.latest_accurate_device_point.device_point_detail.lat_lng)"
+			@click="$emit('set-center', device.latest_accurate_device_point.device_point_detail.lat_lng)"
 		/>
 	</GMapMap>
 </template>
