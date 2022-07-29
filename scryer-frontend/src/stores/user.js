@@ -11,16 +11,13 @@ export const useUserStore = defineStore({
 	}),
 	actions: {
 		async register(username, password, passwordConfirmation) {
-			console.log('WHJAT THE FUCK AGAIN')
-			const { jsonDevicePreferences } = useDevicePreferencesStore()
-			console.log('jsonthing', jsonDevicePreferences)
 			const jsonUser = {
 				username,
 				password,
 				passwordConfirmation,
-				devicePreferences: jsonDevicePreferences,
+				devicePreferences: useDevicePreferencesStore().jsonDevicePreferences,
 			}
-			console.log('jsonUser', jsonUser)
+			console.log('stringify user:', JSON.stringify(jsonUser))
 		 await fetch('http://localhost:5173/users', {
 				method: 'POST',
 				headers: {
@@ -40,7 +37,7 @@ export const useUserStore = defineStore({
 			this.username = username
 		},
 		async updatePreferences(user) {
-			'asdf'
+			return 'asdf'
 		},
 	}
 })

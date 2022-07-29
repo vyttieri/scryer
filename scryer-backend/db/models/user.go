@@ -14,7 +14,7 @@ type User struct {
 	Username string	`json:"username" gorm:"index:,unique,class:VARCHAR(24)"`
 	Password string `json:"password" gorm:"type:varchar(64)"`
 
-	DevicePreferences []DevicePreference
+	DevicePreferences []DevicePreference `json:"devicePreferences"`
 }
 
 // TODO: Add salt

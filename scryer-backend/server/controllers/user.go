@@ -75,7 +75,7 @@ func Logout(c *gin.Context) {
 // I really dislike "Preference" vs "Preferences", they should both be "Preferences"!
 // But I think it's a necessary evil to distinguish between the singular and the plural.
 type DevicePreferenceInput struct {
-	DeviceID string `json:"device_id" binding:"required"`
+	DeviceID string `json:"deviceId" binding:"required"`
 	SortPosition uint `json:"sortPosition" binding:"required"`
 	Visible bool `json:"visible" binding:"required"`
 	Icon string `json:"icon" binding:"required"`
@@ -102,7 +102,8 @@ func CreateUser(c *gin.Context) {
 
 		return
 	}
-
+	fmt.Println("after binding, input in CreateUser:")
+	fmt.Println(input)
 	// Hash password
 	user := models.User{Username: input.Username, Password: input.Password}
 	if err := user.HashPassword(); err != nil {
