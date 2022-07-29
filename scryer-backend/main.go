@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 
+	database "scryer-backend/db"
 	"scryer-backend/db/migrations"
 	"scryer-backend/env"
 	"scryer-backend/server"
@@ -10,6 +11,8 @@ import (
 
 func main() {
 	env.LoadEnv()
+
+	database.Connect()
 
 	flag.Parse()
 	cmd := flag.Arg(0)
