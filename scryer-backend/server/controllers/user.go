@@ -43,7 +43,8 @@ func Login(c *gin.Context) {
 
 		return
 	}
-
+	var devicePreferences []models.DevicePreference
+	user.FindDevicePreferences(&devicePreferences)
 	session := sessions.Default(c)
 	session.Set("ID", user.ID)
 	if err := session.Save(); err != nil {
@@ -51,8 +52,8 @@ func Login(c *gin.Context) {
 		panic(err)
 	}
 
-
-	c.JSON(http.StatusOK, gin.H{"user": User})
+	user.DevicePreferences = devicePreferences
+	c.JSON(http.StatusOK, gin.H{"user": user})
 	fmt.Println("Authenticated, userId")
 	fmt.Println(user.ID)
 }
@@ -130,6 +131,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	// Create our session
 	session := sessions.Default(c)
 	session.Set("ID", user.ID)
 	if err := session.Save(); err != nil {

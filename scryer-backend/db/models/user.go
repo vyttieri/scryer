@@ -51,3 +51,15 @@ func (user *User) FindByUsername() error {
 
 	return err
 }
+
+func (user *User) FindDevicePreferences(devicePreferences *[]DevicePreference) error {
+	association := database.Connection.Model(&user).Association("DevicePreferences")
+	if err := association.Error; err != nil {
+		return err
+	}
+
+	// TODO: Find error
+	association.Find(&devicePreferences)
+
+	return nil
+}
