@@ -10,22 +10,7 @@ import (
 	"scryer-backend/db/models"
 )
 
-// I really dislike "Preference" vs "Preferences", they should both be "Preferences"!
-// But I think it's a necessary evil to distinguish between the singular and the plural.
-type DevicePreferenceInput struct {
-	DeviceID string `json:"device_id" binding:"required"`
-	SortPosition uint `json:"sort_position" binding:"required"`
-	Visible bool `json:"visible" binding:"required"`
-	Icon string `json:"icon" binding:"required"`
-}
 
-type createUserInput struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	PasswordConfirmation string `json:"passwordConfirmation" binding:"required"`
-
-	DevicePreferences []DevicePreferenceInput `json:"device_preferences" binding:"required"`
-}
 
 type userLoginForm struct {
 	Username string `json:"username" binding:"required"`
@@ -34,7 +19,6 @@ type userLoginForm struct {
 
 func Login(c *gin.Context) {
 	var input userLoginForm
-
 	if err := c.ShouldBindJSON(&input); err != nil {
 		fmt.Println(input)
 		panic(err.Error())
@@ -87,9 +71,26 @@ func Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
+// I really dislike "Preference" vs "Preferences", they should both be "Preferences"!
+// But I think it's a necessary evil to distinguish between the singular and the plural.
+type DevicePreferenceInput struct {
+	DeviceID string `json:"device_id" binding:"required"`
+	SortPosition uint `json:"sort_position" binding:"required"`
+	Visible bool `json:"visible" binding:"required"`
+	Icon string `json:"icon" binding:"required"`
+}
+
+type CreateUserInput struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	PasswordConfirmation string `json:"passwordConfirmation" binding:"required"`
+
+	DevicePreferenceInputs []DevicePreferenceInput `json:"device_preferences" binding:"required"`
+}
+
 // POST /users/
 func CreateUser(c *gin.Context) {
-	var input createUserInput
+	var input CreateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		fmt.Println(input)
 		panic(err.Error())
@@ -108,7 +109,22 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	if err := user.Create(); err != nil {
+
+	/*  This what I've decided here: I think the shape of the input is the concern of the controller.
+		Once it's been validated, the controller formats the data into the shape the model understands and needs for DB creation.
+		hence why I'm converting these from DevicePreferenceInputs (input format) to DevicePreferences (model)
+	*/
+
+	devicePreferences := make([]models.DevicePreference, len(input.DevicePreferenceInputs))
+	for i, devicePreferenceInput := range input.DevicePreferenceInputs {
+		devicePreferences[i] = models.DevicePreference{
+			DeviceID: devicePreferenceInput.DeviceID,
+			SortPosition: devicePreferenceInput.SortPosition,
+			Icon: devicePreferenceInput.Icon,
+		}
+	}
+
+	if err := user.CreateWithPreferences(&devicePreferences); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		c.Abort()
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 
 	database "scryer-backend/db"
 )
@@ -28,17 +29,31 @@ func (user *User) CheckPassword(password string) (bool, error) {
 	return err == nil, err
 }
 
-func (user *User) Create() error {
+func (user *User) CreateWithPreferences(devicePreferences *[]DevicePreference) error {
 	fmt.Println("calling Create on user")
 	fmt.Println(user)
-	// TODO: Fix DB stuff
 
-	result := database.Connection.Create(&user)
-	if result.Error != nil {
-		panic(result.Error)
+	err := database.Connection.Transaction(func(tx *gorm.DB) error {
+		if err := database.Connection.Create(&user).Error; err != nil {
+			return err
+		}
+
+		for _, devicePreference := range *devicePreferences {
+			devicePreference.UserID = user.ID
+			if err := database.Connection.Create(&devicePreference).Error; err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+	if err != nil {
+		panic(err)
+		return err
 	}
 
-	return result.Error
+	return nil
+
 }
 
 func (user *User) FindByID() error {
