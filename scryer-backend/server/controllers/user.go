@@ -52,7 +52,7 @@ func Login(c *gin.Context) {
 	}
 
 
-	c.JSON(http.StatusOK, gin.H{"userId": user.ID, "username": user.Username })
+	c.JSON(http.StatusOK, gin.H{"user": User})
 	fmt.Println("Authenticated, userId")
 	fmt.Println(user.ID)
 }
@@ -126,6 +126,15 @@ func CreateUser(c *gin.Context) {
 	if err := user.Create(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		c.Abort()
+
+		return
+	}
+
+	session := sessions.Default(c)
+	session.Set("ID", user.ID)
+	if err := session.Save(); err != nil {
+		fmt.Println("Failed to login", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 
 		return
 	}
