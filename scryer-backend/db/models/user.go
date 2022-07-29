@@ -57,19 +57,23 @@ func (user *User) CreateWithPreferences(devicePreferences *[]DevicePreference) e
 }
 
 func (user *User) FindByID() error {
-	result := database.Connection.Where(&User{Username: user.Username}).First(&user)
-	if result.Error != nil {
-		panic(result.Error)
+	err := database.Connection.Where(&User{Username: user.Username}).First(&user).Error
+	if err != nil {
+		panic(err)
+
+		return err
 	}
 
-	return result.Error
+	return nil
 }
 
 func (user *User) FindByUsername() error {
-	result := database.Connection.Where(&User{Username: user.Username}).First(&user)
-	if result.Error != nil {
-		panic(result.Error)
+	err := database.Connection.Where(&User{Username: user.Username}).First(&user).Error
+	if err != nil {
+		panic(err)
+
+		return err
 	}
 
-	return result.Error
+	return nil
 }
