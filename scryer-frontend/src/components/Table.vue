@@ -1,11 +1,11 @@
 <script setup>
   import { storeToRefs } from 'pinia'
 
-  import { useDeviceStore } from '../stores/device'
-  import { usePreferencesStore } from '../stores/preferences'
+  import { useDeviceStore } from '@/stores/device'
+  import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
   const { devices, loading, error } = storeToRefs(useDeviceStore())
-  const { getDeviceVisibility, setDeviceVisibility, setCenter, setSort } = usePreferencesStore()
+  const { getDeviceVisibility, setDeviceVisibility, setCenter, setSort } = useDevicePreferencesStore()
 
   const columns = [
     { name: 'visible', required: false },

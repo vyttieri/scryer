@@ -4,11 +4,13 @@
 	import LoginForm from './LoginForm.vue'
 	import RegistrationForm from './RegistrationForm.vue'
 
-	import { useDeviceStore } from '../stores/device'
-	import { usePreferencesStore } from '../stores/preferences'
+	import { useDeviceStore } from '@/stores/device'
+	import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
 	const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
-	const { center } = storeToRefs(usePreferencesStore())
+
+	const californiaCenter = { lat: 36.778300, lng: -119.417900 }
+
 </script>
 
 <!-- TODO: Centering seems wrong; device_point_detail is null -->
@@ -16,7 +18,7 @@
 	<LoginForm />
 	<RegistrationForm />
 	<GMapMap
-		:center="center"
+		:center="californiaCenter"
 		:zoom="6"
 	>
 		<GMapMarker

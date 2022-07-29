@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
-import { useAuthStore } from './auth'
-import { usePreferencesStore } from './preferences'
+import { useAuthStore } from '@/stores/auth'
+import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
 export const useUserStore = defineStore({
 	id: 'user',

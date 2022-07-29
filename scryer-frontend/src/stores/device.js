@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import { usePreferencesStore } from './preferences'
+import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
 export const useDeviceStore = defineStore({
   id: 'device',
@@ -13,7 +13,7 @@ export const useDeviceStore = defineStore({
     // deviceIds: state => state.devices.reduce(device => device.device_id),
     // sortedDevices: state => state.devices.sortBy((a, b) => a > b ? 1 : -1)
     visibleDevices: state => {
-      const { getDeviceVisibility } = usePreferencesStore()
+      const { getDeviceVisibility } = useDevicePreferencesStore()
       console.log('in visibleDevices')
       console.log('devices', state.devices)
       state.devices.forEach(device => console.log(device.latest_accurate_device_point.lat_lng))
@@ -35,7 +35,7 @@ export const useDeviceStore = defineStore({
         // this.$patch({ devices: devices })
         this.devices = devices
 
-        const { initOrPatchDevicePreferences } = usePreferencesStore()
+        const { initOrPatchDevicePreferences } = useDevicePreferencesStore()
         initOrPatchDevicePreferences(devices)
       } catch (error) {
         console.log('error fetching devices', error)
