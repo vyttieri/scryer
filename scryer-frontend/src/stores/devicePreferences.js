@@ -24,6 +24,12 @@ export const useDevicePreferencesStore = defineStore({
         else if (icon === 'motorcycle') return 'two_wheeler'
       }
     },
+    // for backend consumption:
+    jsonDevicePreferences: state => {
+      return Object.keys(state.devicePreferences).map(deviceId => {
+        return { ...state.devicePreferences[deviceId], deviceId: deviceId }
+      })
+    }
   },
   actions: {
     initOrPatchDevicePreferences(devices) {
