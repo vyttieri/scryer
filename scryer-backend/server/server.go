@@ -46,6 +46,7 @@ func Run() {
 	private := router.Group("/")
 	private.Use(AuthRequired)
 	private.GET("/logout", controllers.Logout)
+	private.POST("/users/:id/preferences", controllers.UpdateDevicePreferences)
 
 	router.Run()
 }

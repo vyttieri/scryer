@@ -3,10 +3,12 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 
+	database "scryer-backend/db"
 	"scryer-backend/db/models"
 )
 
@@ -41,8 +43,6 @@ func Login(c *gin.Context) {
 
 		return
 	}
-	var devicePreferences []models.DevicePreference
-	user.FindDevicePreferences(&devicePreferences)
 	session := sessions.Default(c)
 	session.Set("ID", user.ID)
 	if err := session.Save(); err != nil {
@@ -50,7 +50,14 @@ func Login(c *gin.Context) {
 		panic(err)
 	}
 
+	// Is there a way to do this in one fell swoop?
+	var devicePreferences []models.DevicePreference
+	if err := user.FindDevicePreferences(&devicePreferences); err != nil {
+		panic(err)
+		return
+	}
 	user.DevicePreferences = devicePreferences
+
 	c.JSON(http.StatusOK, gin.H{"user": user})
 	fmt.Println("Authenticated, userId")
 	fmt.Println(user.ID)
@@ -117,8 +124,9 @@ func CreateUser(c *gin.Context) {
 	for i, DevicePreferenceInput := range input.DevicePreferenceInputs {
 		devicePreferences[i] = models.DevicePreference{
 			DeviceID: DevicePreferenceInput.DeviceID,
-			SortPosition: DevicePreferenceInput.SortPosition,
 			Icon: DevicePreferenceInput.Icon,
+			SortPosition: DevicePreferenceInput.SortPosition,
+			Visible: *DevicePreferenceInput.Visible,
 		}
 	}
 	user.DevicePreferences = devicePreferences
@@ -145,7 +153,57 @@ func CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"user": user})
 }
 
+type updateDevicePreferencesInput struct {
+	DevicePreferenceInputs []DevicePreferenceInput `json:"devicePreferences binding:"required"`
+}
+
 // PUT /users/:id/preferences
-func UpdateUserPreferences(c *gin.Context) {
+func UpdateDevicePreferences(c *gin.Context) {
+	var input updateDevicePreferencesInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		fmt.Println(input)
+		panic(err.Error())
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	session := sessions.Default(c)
+	UserID := session.Get("ID")
+	ID := c.Param("id")
+	if UserID != ID {
+		c.JSON(http.StatusUnauthorized, gin.H{})
+		c.Abort()
+
+		return
+	}
+
+	Uint64ID, err := strconv.ParseUint(ID, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		c.Abort()
+
+		return
+	}
+	// base 10, 64 bit int
+
+	user := models.User{ID: uint(Uint64ID)}
+	if err := user.FindByID(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		c.Abort()
+
+		return
+	}
+
+	devicePreferences := make([]models.DevicePreference, len(input.DevicePreferenceInputs))
+	for i, DevicePreferenceInput := range input.DevicePreferenceInputs {
+		devicePreferences[i] = models.DevicePreference{
+			DeviceID: DevicePreferenceInput.DeviceID,
+			Icon: DevicePreferenceInput.Icon,
+			SortPosition: DevicePreferenceInput.SortPosition,
+			Visible: *DevicePreferenceInput.Visible,
+		}
+	}
+	database.Connection.Model(&user).Association("DevicePreferences").Replace(devicePreferences)
 
 }
