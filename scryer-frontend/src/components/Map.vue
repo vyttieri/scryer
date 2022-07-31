@@ -8,7 +8,6 @@ import { useDeviceStore } from '@/stores/device'
 import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
 const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
-
 </script>
 
 <template>
@@ -23,6 +22,7 @@ const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
 			v-for="device in visibleDevices"
 			:position="device.latest_accurate_device_point.device_point_detail.lat_lng"
 			@click="$emit('set-center', device.latest_accurate_device_point.device_point_detail.lat_lng)"
+			:label="{ className: 'q-icons material-icons', fontFamily: 'Material Icons', text: 'directions_car', fontSize: '18px', color: '#fff' }"
 		/>
 	</GMapMap>
 </template>
