@@ -7,6 +7,7 @@ export const useDevicePreferencesStore = defineStore({
       // visible: true, icon: 'car', sortPosition: 1
     }
   }),
+  persist: true,
   getters: {
     getDeviceVisibility: state => {
       return device => {

@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { Quasar, Dialog } from 'quasar'
 import VueGoogleMaps from '@fawmi/vue-google-maps'
 
@@ -15,7 +16,10 @@ app.use(VueGoogleMaps, {
 		key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 	}
 })
-app.use(createPinia())
+
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
+app.use(pinia)
 
 app.use(Quasar, {
 	plugins: {

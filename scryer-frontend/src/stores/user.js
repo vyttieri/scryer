@@ -7,8 +7,9 @@ export const useUserStore = defineStore({
 	id: 'user',
 	state: () => ({
 		userId: null,
-		username: null
+		username: null,
 	}),
+	persist: true,
 	actions: {
 		async register(username, password, passwordConfirmation) {
 			const jsonUser = {
