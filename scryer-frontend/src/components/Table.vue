@@ -44,6 +44,8 @@ const onRowClick = (event, row) => {
     :columns="columns"
     row-key="name"
     class="table"
+    v-model:pagination="pagination"
+    :rows-per-page-options="[0]"
   >
     <template v-slot:body="props">
       <q-tr :props="props">
@@ -107,6 +109,14 @@ export default {
       //   return 'lat' in value &&'lng' in value && typeof(value[lat]) === 'string' && typeof(value[lng)]) === 'string'
       // }
     },
+  },
+  data() {
+    return {
+      pagination: {
+        page: 1,
+        rowsPerPage: 0,
+      }
+    }
   }
 }
 </script>
