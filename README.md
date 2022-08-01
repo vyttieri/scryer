@@ -47,6 +47,11 @@
     - ~Send user preferences back with login action~
     - ~UPDATE user preferences on change~
 9. Prettify frontend
+    - draggable/sort
+    - icon selector
+    - modal for login/register forms
+    - Layout
+10. Code Cleanup
 
 ### Structure
 
