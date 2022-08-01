@@ -14,7 +14,6 @@ import (
 var Connection *gorm.DB
 
 func Connect() {
-	fmt.Println("hello")
 	var connectionString = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		env.DbUser,
 		env.DbUserPassword,
@@ -27,6 +26,7 @@ func Connect() {
 	var dbError error
 	Connection, dbError = gorm.Open(mysql.Open(connectionString), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
 	if dbError != nil {
-		panic("Something went wrong connecting to database")
+		fmt.Println("Couldnt connect to db", dbError)
+		panic(dbError)
 	}
 }
