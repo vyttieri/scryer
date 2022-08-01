@@ -46,7 +46,7 @@ export const useDevicePreferencesStore = defineStore({
       this.devicePreferences = { ...devicePreferences, ...this.devicePreferences}
 
       let sortPositions = devices
-        .sort((deviceA, deviceB) => deviceA.display_name > deviceB.display_name ? 1 : -1)
+        .sort((deviceA, deviceB) => deviceA.display_name > deviceB.display_name ? -1 : 1)
         .map(device => device.device_id)
       if (this.sortPositions === []) {
         this.sortPositions = sortPositions
@@ -63,6 +63,13 @@ export const useDevicePreferencesStore = defineStore({
     },
     setDevicePreferences(devicePreferences) {
       this.devicePreferences = devicePreferences
+
+      // Transform sortPositions back into shape expected by this store
+      let sortArray = Object.keys(devicePreferences).map(deviceId => {
+        return [deviceId, devicePreferences[deviceId].sortOrder]
+      })
+      sortArray = sortArray.sort((a, b) => a.sortOrder > b.sortOrder ? 1 : -1).map(tuple => tuple.deviceId)
+      this.sortPositions = sortArray
     },
     async updateDevicePreferences() {
       console.log('updateDevicePreferences hit')

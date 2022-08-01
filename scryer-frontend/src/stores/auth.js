@@ -62,9 +62,9 @@ export const useAuthStore = defineStore({
 
                 // reset devicePreferences store. Basically reset it to null and then init
                 // from devices list again
-                const devicePreferencesStore = useDevicePreferencesStore()
-
                 const { devices } = storeToRefs(useDeviceStore())
+                const devicePreferencesStore = useDevicePreferencesStore()
+                devicePreferencesStore.$reset()
                 devicePreferencesStore.initOrPatchDevicePreferences(devices.value)
                 console.log('successfully logged out')
               } else {
