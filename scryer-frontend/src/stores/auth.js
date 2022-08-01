@@ -56,7 +56,8 @@ export const useAuthStore = defineStore({
           await fetch('http://localhost:5173/logout')
             .then(response => {
               if (response.status === 200) {
-                useUserStore().setUser(null, null)
+                useUserStore().$reset()
+                useDevicePreferencesStore().$reset()
                 console.log('successfully logged out')
               } else {
                 // panic at the disco
