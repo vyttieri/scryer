@@ -56,6 +56,8 @@ export const useDevicePreferencesStore = defineStore({
         body: JSON.stringify({ devicePreferences: this.jsonDevicePreferences }),
       })
     },
-
+    setDeviceIcon(deviceId, icon) {
+      this.devicePreferences[deviceId].icon = icon
+    }
   },
 })

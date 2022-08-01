@@ -5,7 +5,7 @@ import { useDeviceStore } from '@/stores/device'
 import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
 const { devices, loading, error } = storeToRefs(useDeviceStore())
-const { getDeviceVisibility, setDeviceVisibility, getDeviceIcon } = useDevicePreferencesStore()
+const { getDeviceVisibility, setDeviceVisibility, getDeviceIcon, setDeviceIcon } = useDevicePreferencesStore()
 console.log('got some deviceIcon', getDeviceIcon)
 
 const columns = [
@@ -48,15 +48,21 @@ const onRowClick = (event, row) => {
   >
     <template v-slot:body="props">
       <q-tr :props="props">
-        <q-td key="icon" clickable @click="setDeviceVisibility(props.row)">
-          <q-icon v-if="getDeviceVisibility(props.row)" color="primary" name="visibility" />
-          <q-icon v-else color="negative" name="visibility_off" />
+        <q-td key="icon" @click="setDeviceVisibility(props.row)">
+          <q-icon v-if="getDeviceVisibility(props.row)" color="primary" name="visibility" class="cursor-pointer" />
+          <q-icon v-else color="negative" name="visibility_off"  class="cursor-pointer" />
+        </q-td>
+        <q-td key="location">
+          <q-icon color="primary" name="my_location" @click="$emit('set-center', props.row.latest_accurate_device_point.device_point_detail.lat_lng)" class="cursor-pointer" />
         </q-td>
         <q-td key="icon">
-          <q-icon clickable color="primary" name="my_location" @click="$emit('set-center', props.row.latest_accurate_device_point.device_point_detail.lat_lng)" />
-        </q-td>
-        <q-td key="icon">
-          <q-icon clickable color="primary" :name="getDeviceIcon(props.row)" />
+          <q-fab color="amber" text-color="black" :icon="getDeviceIcon(props.row)">
+            <q-fab-action color="amber" text-color="black" icon="directions_car" @click="setDeviceIcon(props.row.device_id, 'directions_car')" />
+            <q-fab-action color="amber" text-color="black" icon="two_wheeler" @click="setDeviceIcon(props.row.device_id, 'two_wheeler')" />
+            <q-fab-action color="amber" text-color="black" icon="child_friendly" @click="setDeviceIcon(props.row.device_id, 'child_friendly')" />
+            <q-fab-action color="amber" text-color="black" icon="agriculture" @click="setDeviceIcon(props.row.device_id, 'agriculture')" />
+          </q-fab>
+          <!-- <q-icon color="primary" :name="getDeviceIcon(props.row)" class="cursor-pointer" @click="setDeviceIcon(props.row.device_id)" /> -->
         </q-td>
         <q-td key="name" :props="props">
           {{ props.row.display_name }}
