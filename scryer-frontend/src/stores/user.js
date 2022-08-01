@@ -29,7 +29,7 @@ export const useUserStore = defineStore({
 			})
 		 	.then(response => response.json())
 		 	.then(result => {
-   			  this.userId = result.user.userId
+   			  this.userId = result.user.id
 			  this.username = result.user.username
 		 	})
 		},

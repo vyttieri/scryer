@@ -28,10 +28,10 @@ const { username } = storeToRefs(userStore)
       <div>
         <q-btn v-if="username !== null" clickable><q-icon name="save" @click="devicePreferencesStore.updateDevicePreferences()" /></q-btn>
         <q-btn v-if="username === null" label="Login" color="primary" @click="login = true" />
-          <q-menu>
+        <q-menu v-if="username === null" style="padding: 4px;">
             <LoginForm v-if="register === false" @toggle-forms="toggleForms" />
             <RegistrationForm v-else @toggle-forms="toggleForms" />
-          </q-menu>
+        </q-menu>
         <q-btn v-if="username !== null" label="Logout" color="primary" @click="authStore.logout()"/>
       </div>
     </q-toolbar>
