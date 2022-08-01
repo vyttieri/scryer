@@ -27,7 +27,7 @@ onMounted(() => {
     <p v-if="error">{{ error.message }}</p>
     <q-layout view="hHh lpR fFf">
       <Header />
-      <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
+      <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered :width="350">
         <Table :center="center" @set-center="setCenter" />
       </q-drawer>
       <q-page-container style="width:  100vw; height: 100vh;">
