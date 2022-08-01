@@ -18,35 +18,33 @@ func AuthRequired(c *gin.Context) {
 	session := sessions.Default(c)
 	user := session.Get("ID")
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User is not logged in"})
 		c.Abort()
 
-		panic("User is not logged in")
+		return
 	}
 }
 
 func Run() {
-	router := gin.Default()
-	router.LoadHTMLFiles("templates/index.html")
+	r := gin.Default()
+	r.LoadHTMLFiles("templates/index.html")
 
-	router.Use(sessions.Sessions("session", cookie.NewStore([]byte(os.Getenv("SESSION_SECRET")))))
+	r.Use(sessions.Sessions("session", cookie.NewStore([]byte(os.Getenv("SESSION_SECRET")))))
 
-	router.GET("/", controllers.Index)
+	r.GET("/", controllers.Index)
 
 	// Use a simple cache for OneStepGPS API so I'm not spamming their API too much
-	// Timeout can be tailored based on use case.
 	store := persistence.NewInMemoryStore(time.Second)
-	// TODO: Change cache expiration time
-	// TODO: Error handling
-	router.GET("/ping", cache.CachePage(store, time.Hour, controllers.OneStepGpsData))
+	r.GET("/ping", cache.CachePage(store, time.Minute, controllers.OneStepGpsData))
 
-	router.POST("/register", controllers.CreateUser)
-	router.POST("/login", controllers.Login)
+	r.POST("/register", controllers.CreateUser)
+	r.POST("/login", controllers.Login)
 
-	private := router.Group("/")
+	// Both these routes require login
+	private := r.Group("/")
 	private.Use(AuthRequired)
 	private.GET("/logout", controllers.Logout)
 	private.PUT("/user/preferences", controllers.UpdateDevicePreferences)
 
-	router.Run()
+	r.Run()
 }
