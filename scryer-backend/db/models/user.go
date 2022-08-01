@@ -17,7 +17,7 @@ type User struct {
 	DevicePreferences []DevicePreference `json:"devicePreferences"`
 }
 
-// TODO: Add salt
+// This could use a salt and a pepper for a real-world application.
 func (user *User) HashPassword() error {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
 	user.Password = string(bytes)
