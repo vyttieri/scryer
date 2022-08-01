@@ -3,10 +3,7 @@
 ![Scryer](scryer.png)
 
 ### TODO
-- Make `golangci-lint` run properly in SublimeText
 - Error Handling (api, application, frontend); Data Validation (db, application, frontend)
-- Multiple `.gitignore` business
-- New Device?
 
 ### Run
 - `go run main.go` or with air installed `air`
@@ -64,9 +61,6 @@
 - In MySQL: `CREATE DATABASE scryer;`; `CREATE USER 'scryer'@'localhost' IDENTIFIED BY 'onestepgpsr00lz';` `GRANT ALL PRIVILEGES ON scryer.* TO 'scryer'@'localhost' WITH GRANT OPTION;`
 
 ### Limitations/Improvements
- - JWT stored in localStorage is vulnerable to malicious JS. Worth considering other methods of storage.
-
-### Improvements
-- It would be great to define a more generalized API in which the client could request the specific fields they wanted to retrieve from the API. Since this project is limited in scope I opted to build an endpoint that serves exactly the data the client needs.
-- Logging.
-
+- The OneStepGPS API endpoint is just a passthrough endpoint right now. It hits the API and then passes all that data back to the client. It would be good to tailor the endpoint to serve only the data the client needs to consume.
+- Production readiness - At a minimum, different environments, using a real logger, adding a build process to compile JS.
+- Password Hashing process could use, at a minimum, salts, for additional security. Ideally use a pre-built implementation that is secure.

@@ -18,7 +18,6 @@ export const useUserStore = defineStore({
 				passwordConfirmation,
 				devicePreferences: useDevicePreferenceStore().jsonDevicePreferences,
 			}
-			console.log('stringify user:', JSON.stringify(jsonUser))
 		 await fetch('http://localhost:5173/register', {
 				method: 'POST',
 				headers: {

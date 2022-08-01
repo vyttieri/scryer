@@ -22,7 +22,6 @@ export const useAuthStore = defineStore({
       this.loading = true
       this.error = null
       try {
-        console.log('logging in', username, password)
         await fetch('http://localhost:5173/login', {
           method: 'POST',
           headers: {
@@ -33,7 +32,6 @@ export const useAuthStore = defineStore({
         })
           .then(response => response.json())
           .then(data => {
-            console.log(data.user)
             useUserStore().setUser(data.user.id, data.user.username)
 
             // convert from backend [] format to frontend {} format
@@ -49,18 +47,15 @@ export const useAuthStore = defineStore({
                     }
                   },
             {})
-            console.log('setting devicePreferences with:', devicePreferences)
             useDevicePreferenceStore().setDevicePreferences(devicePreferences)
           })
 
       } catch (error) {
-        console.log('got error logging in', error)
         this.error = error
       }
     },
     async logout() {
       try {
-          console.log('logging out')
           await fetch('http://localhost:5173/logout')
             .then(response => {
               if (response.status === 200) {
@@ -73,13 +68,11 @@ export const useAuthStore = defineStore({
                 const devicePreferenceStore = useDevicePreferenceStore()
                 devicePreferenceStore.$reset()
                 devicePreferenceStore.initOrPatchDevicePreferences(devices.value)
-                console.log('successfully logged out')
               } else {
                 // panic at the disco
               }
             })
         } catch (error) {
-          console.log('got error logging in', error)
           this.error = error
         }
     },
