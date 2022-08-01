@@ -14,7 +14,5 @@ type DevicePreference struct {
 }
 
 func (devicePreference *DevicePreference) Save() error {
-	err := database.Connection.Save(&devicePreference).Error
-
-	return err
+	return database.Connection.Save(&devicePreference).Error
 }
