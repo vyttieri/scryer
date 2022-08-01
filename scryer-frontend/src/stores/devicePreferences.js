@@ -23,8 +23,14 @@ export const useDevicePreferencesStore = defineStore({
     },
     // for backend consumption:
     jsonDevicePreferences: state => {
+      // Add sortPositions back to individual devicePreference records
+      let sortMap = {}
+      state.sortPositions.forEach((deviceId, i) => {
+        sortMap[deviceId] = i
+      })
+
       return Object.keys(state.devicePreferences).map(deviceId => {
-        return { ...state.devicePreferences[deviceId], deviceId: deviceId }
+        return { ...state.devicePreferences[deviceId], deviceId: deviceId, sortPosition: sortMap[deviceId] }
       })
     }
   },
