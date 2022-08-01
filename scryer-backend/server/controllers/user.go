@@ -12,9 +12,9 @@ import (
 
 
 type createUserInput struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	PasswordConfirmation string `json:"passwordConfirmation" binding:"required"`
+	Username string `json:"username" binding:"required,gte=1lte=32"`
+	Password string `json:"password" binding:"required,gte=1,lte=64"`
+	PasswordConfirmation string `json:"passwordConfirmation" binding:"required,gte=1,lte=64"`
 
 	DevicePreferenceInputs []DevicePreferenceInput `json:"devicePreferences" binding:"required"`
 }

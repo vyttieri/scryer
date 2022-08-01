@@ -11,8 +11,8 @@ import (
 )
 
 type userLoginForm struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Username string `json:"username" binding:"required,gte=1,lte=32"`
+	Password string `json:"password" binding:"required,gte=1,lte=64"`
 }
 
 func Login(c *gin.Context) {
