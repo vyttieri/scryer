@@ -7,7 +7,10 @@ import RegistrationForm from './RegistrationForm.vue'
 import { useDeviceStore } from '@/stores/device'
 import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
-const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
+const deviceStore = useDeviceStore()
+const { getDeviceIcon } = useDevicePreferencesStore()
+const { devices, visibleDevices } =  storeToRefs(deviceStore)
+
 </script>
 
 <template>
@@ -22,7 +25,7 @@ const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
 			v-for="device in visibleDevices"
 			:position="device.latest_accurate_device_point.device_point_detail.lat_lng"
 			@click="$emit('set-center', device.latest_accurate_device_point.device_point_detail.lat_lng)"
-			:label="{ className: 'q-icons material-icons', fontFamily: 'Material Icons', text: 'directions_car', fontSize: '18px', color: '#fff' }"
+			:label="{ className: 'q-icons material-icons', fontFamily: 'Material Icons', text: getDeviceIcon(device), fontSize: '18px', color: '#fff' }"
 		/>
 	</GMapMap>
 </template>

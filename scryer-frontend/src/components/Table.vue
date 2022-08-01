@@ -6,7 +6,6 @@ import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
 const { devices, loading, error } = storeToRefs(useDeviceStore())
 const { getDeviceVisibility, setDeviceVisibility, getDeviceIcon, setDeviceIcon } = useDevicePreferencesStore()
-console.log('got some deviceIcon', getDeviceIcon)
 
 const columns = [
   { name: 'visible', required: false },
@@ -59,8 +58,8 @@ const onRowClick = (event, row) => {
           <q-fab color="amber" text-color="black" :icon="getDeviceIcon(props.row)">
             <q-fab-action color="amber" text-color="black" icon="directions_car" @click="setDeviceIcon(props.row.device_id, 'directions_car')" />
             <q-fab-action color="amber" text-color="black" icon="two_wheeler" @click="setDeviceIcon(props.row.device_id, 'two_wheeler')" />
-            <q-fab-action color="amber" text-color="black" icon="child_friendly" @click="setDeviceIcon(props.row.device_id, 'child_friendly')" />
             <q-fab-action color="amber" text-color="black" icon="agriculture" @click="setDeviceIcon(props.row.device_id, 'agriculture')" />
+            <q-fab-action color="amber" text-color="black" icon="child_friendly" @click="setDeviceIcon(props.row.device_id, 'child_friendly')" />
           </q-fab>
           <!-- <q-icon color="primary" :name="getDeviceIcon(props.row)" class="cursor-pointer" @click="setDeviceIcon(props.row.device_id)" /> -->
         </q-td>
