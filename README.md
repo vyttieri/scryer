@@ -48,8 +48,8 @@
     - ~UPDATE user preferences on change~
 9. Prettify frontend
     - draggable/sort
-    - icon selector
-    - modal for login/register forms
+    - ~icon selector~
+    - ~modal for login/register forms~
     - Layout
 10. Code Cleanup
 
@@ -70,3 +70,5 @@
 
 ### Improvements
 - It would be great to define a more generalized API in which the client could request the specific fields they wanted to retrieve from the API. Since this project is limited in scope I opted to build an endpoint that serves exactly the data the client needs.
+- Logging.
+
