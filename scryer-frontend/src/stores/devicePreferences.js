@@ -36,8 +36,6 @@ export const useDevicePreferencesStore = defineStore({
   },
   actions: {
     initOrPatchDevicePreferences(devices) {
-      console.log('logging devices from preferences', devices)
-
       let devicePreferences = devices.reduce((acc, device) => {
         return { ...acc, [device.device_id]: { visible: true, icon: 'directions_car' } }
       }, {})
@@ -51,13 +49,8 @@ export const useDevicePreferencesStore = defineStore({
       if (this.sortPositions === []) {
         this.sortPositions = sortPositions
       }
-
-      console.log('updated devicePreferences', devicePreferences)
-      console.log('updated sortPositions', sortPositions)
     },
     setDeviceVisibility(device) {
-      console.log('we clicked the device icon', device, device.device_id)
-
       var visible = this.devicePreferences[device.device_id].visible
       this.devicePreferences[device.device_id].visible = !visible
     },
@@ -72,7 +65,6 @@ export const useDevicePreferencesStore = defineStore({
       this.sortPositions = sortArray
     },
     async updateDevicePreferences() {
-      console.log('updateDevicePreferences hit')
       await fetch(`http://localhost:5173/user/preferences`, {
         method: 'PUT',
         headers: {
@@ -86,14 +78,11 @@ export const useDevicePreferencesStore = defineStore({
       this.devicePreferences[deviceId].icon = icon
     },
     setSortPosition(deviceId, newPosition) {
-      console.log(deviceId, newPosition)
-
       // remove old position
       this.sortPositions = this.sortPositions.filter(listDeviceId => deviceId !== listDeviceId)
-      console.log('intermediate', this.sortPositions)
+
       // insert at new position
       this.sortPositions.splice(newPosition, 0, deviceId)
-      console.log('final', this.sortPositions)
     },
   },
 })

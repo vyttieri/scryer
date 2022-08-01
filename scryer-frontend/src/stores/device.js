@@ -14,8 +14,6 @@ export const useDeviceStore = defineStore({
       const { sortPositions }  = storeToRefs(useDevicePreferencesStore())
       let deviceMap = {}
       sortPositions.value.forEach((deviceId, i) => deviceMap[deviceId] = i)
-      console.log('dedvice map', deviceMap)
-      console.log('what is devices', state.devices)
       return state.devices.sort((a, b) => deviceMap[a.device_id] > deviceMap[b.device_id] ? 1 : -1)
     },
     visibleDevices: state => {
@@ -26,16 +24,12 @@ export const useDeviceStore = defineStore({
   },
   actions: {
     async fetchDevices() {
-      console.log('fetching devices')
       this.loading = true
 
       try {
         const devices = await fetch('http://localhost:5173/ping')
           .then(response => response.json())
           .then(data => data.response.result_list)
-        console.log('logging devices from fetchDevices', devices)
-        // TODO: This probably isn't working as planned
-        // this.$patch({ devices: devices })
         this.devices = devices
 
         const { initOrPatchDevicePreferences } = useDevicePreferencesStore()

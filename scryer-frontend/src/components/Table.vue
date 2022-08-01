@@ -23,8 +23,10 @@ function onListDrag(e) {
 <template>
   <q-list bordered padding separator q-hoverable v-if="sortedDevices">
     <q-item class="list-header">
-      <q-item-section>
-      </q-item-section>
+      <!-- a bit janky, but basically adding empty headers so formatting works for q-list -->
+      <q-item-section></q-item-section>
+      <q-item-section></q-item-section>
+      <q-item-section></q-item-section>
       <q-item-section>Device Name</q-item-section>
       <q-item-section>Active State</q-item-section>
       <q-item-section>Drive Status</q-item-section>
@@ -39,10 +41,14 @@ function onListDrag(e) {
     >
       <template #item="{ element }">
          <q-item class="list-device">
+            <q-item-section class="list-icon">
+              <q-icon v-if="getDeviceVisibility(element)" color="primary" name="visibility" @click="setDeviceVisibility(element)" class="cursor-pointer" />
+              <q-icon v-else color="negative" name="visibility_off" @click="setDeviceVisibility(element)" class="cursor-pointer" />
+            </q-item-section>
+            <q-item-section class="list-icon">
+              <q-icon color="primary" name="my_location" @click="$emit('set-center', element.latest_accurate_device_point.device_point_detail.lat_lng)" class="cursor-pointer" />
+            </q-item-section>
             <q-item-section>
-              <q-icon clickable v-if="getDeviceVisibility(element)" color="primary" name="visibility" @click="setDeviceVisibility(element)" />
-              <q-icon clickable v-else color="negative" name="visibility_off" @click="setDeviceVisibility(element)" />
-              <q-icon clickable color="primary" name="my_location" @click="$emit('set-center', element.latest_accurate_device_point.device_point_detail.lat_lng)"/>
               <q-fab color="red" text-color="white" :icon="getDeviceIcon(element)">
                 <q-fab-action color="red" text-color="white" icon="directions_car" @click="setDeviceIcon(element.device_id, 'directions_car')" />
                 <q-fab-action color="red" text-color="white" icon="two_wheeler" @click="setDeviceIcon(element.device_id, 'two_wheeler')" />
@@ -65,6 +71,9 @@ function onListDrag(e) {
 }
 .list-device {
   border:  1px solid #eee;
+}
+.list-icon {
+  width:  20px;
 }
 
 /* Applies when list element is being dragged */
