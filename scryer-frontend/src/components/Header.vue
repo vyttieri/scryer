@@ -4,8 +4,9 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
 import { useDevicePreferencesStore } from '@/stores/devicePreferences'
-import LoginForm from '@/components/LoginForm.vue'
 
+import LoginForm from '@/components/LoginForm.vue'
+import RegistrationForm from '@/components/RegistrationForm.vue'
 
 const authStore = useAuthStore()
 const devicePreferencesStore = useDevicePreferencesStore()

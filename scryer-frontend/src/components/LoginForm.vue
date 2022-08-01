@@ -8,7 +8,7 @@ const authStore = useAuthStore()
     <q-input v-model="username" filled type="text" hint="Username" />
     <q-input v-model="password" filled type="password" hint="Password" />
     <q-btn label="Login" type="submit" />
-    <q-btn label="Register" @click="$emit('toggle-forms')" />
+    <a @click="$emit('toggle-forms')" class="cursor-pointer">Register</a>
     <div v-if="errors">{{errors.ApiError}}</div>
   </q-form>
 </template>
