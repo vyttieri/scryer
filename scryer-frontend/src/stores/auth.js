@@ -26,13 +26,14 @@ export const useAuthStore = defineStore({
           .then(response => response.json())
           .then(data => {
             console.log(data.user)
-            useUserStore().setUser(data.user.userId, data.user.username)
+            useUserStore().setUser(data.user.id, data.user.username)
 
             // convert from backend [] format to frontend {} format
             const devicePreferences = data.user.devicePreferences.reduce((acc, devicePreference) => {
                     return {
                       ...acc,
                       [devicePreference.deviceId]: {
+                        id: devicePreference.id,
                         icon: devicePreference.icon,
                         sortOrder: devicePreference.sortOrder,
                         visible: devicePreference.visible,

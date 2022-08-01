@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
+import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
 import Popup from '@/components/Popup.vue'
 
@@ -32,7 +33,7 @@ const { username } = storeToRefs(userStore)
         </q-card>
       </q-dialog> -->a
 
-      <q-btn v-if="username !== null" clickable><q-icon name="save" @click="userStore.updateDevicePreferences()" /></q-btn>
+      <q-btn v-if="username !== null" clickable><q-icon name="save" @click="useDevicePreferencesStore().updateDevicePreferences()" /></q-btn>
       <q-btn v-if="username === null" label="Login" color="primary" @click="$refs.dialogRef.show(); " />
       <q-btn v-else label="Logout" color="primary" @click="authStore.logout()"/>
       <Popup />

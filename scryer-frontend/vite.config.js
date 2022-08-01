@@ -35,16 +35,16 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-      '/refresh_token': {
+      '/register': {
         target: 'http://localhost:8080/',
         changeOrigin: true,
         secure: false,
       },
-      '/users': {
+      '/user/preferences': {
         target: 'http://localhost:8080/',
         changeOrigin: true,
         secure: false,
-      }
+      },
     }
   }
 })

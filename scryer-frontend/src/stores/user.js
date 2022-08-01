@@ -18,7 +18,7 @@ export const useUserStore = defineStore({
 				devicePreferences: useDevicePreferencesStore().jsonDevicePreferences,
 			}
 			console.log('stringify user:', JSON.stringify(jsonUser))
-		 await fetch('http://localhost:5173/users', {
+		 await fetch('http://localhost:5173/register', {
 				method: 'POST',
 				headers: {
 					'Accept': 'application/json',
@@ -35,16 +35,6 @@ export const useUserStore = defineStore({
 		setUser(userId, username) {
 			this.userId = userId
 			this.username = username
-		},
-		async updateDevicePreferences() {
-			await fetch(`http://localhost:5173/users/${this.userId}/preferences`, {
-				method: 'POST',
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(useDevicePreferencesStore().jsonDevicePreferences),
-			})
 		},
 	}
 })

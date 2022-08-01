@@ -3,8 +3,6 @@ package controllers
 import (
 	"fmt"
 	"net/http"
-	"strconv"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 
@@ -154,13 +152,21 @@ func CreateUser(c *gin.Context) {
 }
 
 type updateDevicePreferencesInput struct {
-	DevicePreferenceInputs []DevicePreferenceInput `json:"devicePreferences binding:"required"`
+	DevicePreferenceInputs []UpdateDevicePreferenceInput `json:"devicePreferences binding:"required"`
+}
+
+// Since we are updating, we should have the ID
+type UpdateDevicePreferenceInput struct {
+	ID uint `json:"id" binding:"required"`
+	DeviceID string `json:"deviceId" binding:"required"`
+	SortPosition uint `json:"sortPosition" binding:"required"`
+	Visible *bool `json:"visible" binding:"required"`
+	Icon string `json:"icon" binding:"required"`
 }
 
 // PUT /users/:id/preferences
 func UpdateDevicePreferences(c *gin.Context) {
 	var input updateDevicePreferencesInput
-
 	if err := c.ShouldBindJSON(&input); err != nil {
 		fmt.Println(input)
 		panic(err.Error())
@@ -169,25 +175,8 @@ func UpdateDevicePreferences(c *gin.Context) {
 	}
 
 	session := sessions.Default(c)
-	UserID := session.Get("ID")
-	ID := c.Param("id")
-	if UserID != ID {
-		c.JSON(http.StatusUnauthorized, gin.H{})
-		c.Abort()
-
-		return
-	}
-
-	Uint64ID, err := strconv.ParseUint(ID, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{})
-		c.Abort()
-
-		return
-	}
-	// base 10, 64 bit int
-
-	user := models.User{ID: uint(Uint64ID)}
+	UserID := session.Get("ID").(uint)
+	user := models.User{ID: UserID}
 	if err := user.FindByID(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{})
 		c.Abort()
@@ -206,4 +195,5 @@ func UpdateDevicePreferences(c *gin.Context) {
 	}
 	database.Connection.Model(&user).Association("DevicePreferences").Replace(devicePreferences)
 
+	c.JSON(http.StatusOK, gin.H{})
 }

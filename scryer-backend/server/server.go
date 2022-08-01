@@ -40,13 +40,13 @@ func Run() {
 	// TODO: Error handling
 	router.GET("/ping", cache.CachePage(store, time.Hour, controllers.OneStepGpsData))
 
-	router.POST("/users", controllers.CreateUser)
+	router.POST("/register", controllers.CreateUser)
 	router.POST("/login", controllers.Login)
 
 	private := router.Group("/")
 	private.Use(AuthRequired)
 	private.GET("/logout", controllers.Logout)
-	private.POST("/users/:id/preferences", controllers.UpdateDevicePreferences)
+	private.PUT("/user/preferences", controllers.UpdateDevicePreferences)
 
 	router.Run()
 }
