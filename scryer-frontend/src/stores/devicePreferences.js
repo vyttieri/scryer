@@ -13,16 +13,8 @@ export const useDevicePreferencesStore = defineStore({
         return state.devicePreferences[device.device_id].visible
       }
     },
-    // this maps from simple names to material ui icon names
     getDeviceIcon: state => {
-      return device => {
-        const icon = state.devicePreferences[device.device_id].icon
-
-        if (icon === 'car') return 'directions_car'
-        else if (icon === 'truck') return 'local_shipping'
-        else if (icon === 'scooter') return 'delivery_dining'
-        else if (icon === 'motorcycle') return 'two_wheeler'
-      }
+      return device => state.devicePreferences[device.device_id].icon
     },
     // for backend consumption:
     jsonDevicePreferences: state => {
@@ -36,7 +28,7 @@ export const useDevicePreferencesStore = defineStore({
       console.log('logging devices from preferences', devices)
 
       let devicePreferences = devices.reduce((acc, device) => {
-        return { ...acc, [device.device_id]: { visible: true, icon: 'car' } }
+        return { ...acc, [device.device_id]: { visible: true, icon: 'directions_car' } }
       }, {})
 
       // spread will overwrite with second object, so we're effectively only adding new devices

@@ -32,9 +32,25 @@ const { username } = storeToRefs(userStore)
         </q-card>
       </q-dialog> -->a
 
+      <q-btn v-if="username !== null" clickable><q-icon name="save" @click="userStore.updateDevicePreferences()" /></q-btn>
       <q-btn v-if="username === null" label="Login" color="primary" @click="$refs.dialogRef.show(); " />
       <q-btn v-else label="Logout" color="primary" @click="authStore.logout()"/>
       <Popup />
+
     </q-toolbar>
+    <q-ajax-bar :hijack-filter="filterAjaxBar" />
   </q-header>
 </template>
+
+<script>
+export default {
+  setup() {
+    return {
+      filterAjaxBar(url) {
+        // We only want to display the ajax bar when we go to save user preferences.
+        return /^localhost:5173\/users\/[\d]+\/preferences/.test(url)
+      }
+    }
+  }
+}
+</script>

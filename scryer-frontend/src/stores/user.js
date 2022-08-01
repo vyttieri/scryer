@@ -36,8 +36,15 @@ export const useUserStore = defineStore({
 			this.userId = userId
 			this.username = username
 		},
-		async updatePreferences(user) {
-			return 'asdf'
+		async updateDevicePreferences() {
+			await fetch(`http://localhost:5173/users/${this.userId}/preferences`, {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(useDevicePreferencesStore().jsonDevicePreferences),
+			})
 		},
 	}
 })
