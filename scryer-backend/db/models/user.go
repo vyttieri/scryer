@@ -63,3 +63,7 @@ func (user *User) FindDevicePreferences(devicePreferences *[]DevicePreference) e
 
 	return nil
 }
+
+func (user *User) UpdateDevicePreferences(devicePreferences *[]DevicePreference) error {
+	return nil
+}

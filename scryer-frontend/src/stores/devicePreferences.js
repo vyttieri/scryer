@@ -28,7 +28,7 @@ export const useDevicePreferencesStore = defineStore({
       console.log('logging devices from preferences', devices)
 
       let devicePreferences = devices.reduce((acc, device) => {
-        return { ...acc, [device.device_id]: { visible: true, icon: 'directions_car', sortPosition: -1 } }
+        return { ...acc, [device.device_id]: { visible: true, icon: 'directions_car', sortPosition: 0 } }
       }, {})
 
       // spread will overwrite with second object, so we're effectively only adding new devices
@@ -45,6 +45,7 @@ export const useDevicePreferencesStore = defineStore({
       this.devicePreferences = devicePreferences
     },
     async updateDevicePreferences() {
+      console.log('updateDevicePreferences hit')
       await fetch(`http://localhost:5173/user/preferences`, {
         method: 'PUT',
         headers: {

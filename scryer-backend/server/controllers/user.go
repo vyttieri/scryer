@@ -6,7 +6,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 
-	database "scryer-backend/db"
+	// database "scryer-backend/db"
 	"scryer-backend/db/models"
 )
 
@@ -152,7 +152,7 @@ func CreateUser(c *gin.Context) {
 }
 
 type updateDevicePreferencesInput struct {
-	DevicePreferenceInputs []UpdateDevicePreferenceInput `json:"devicePreferences binding:"required"`
+	DevicePreferenceInputs []UpdateDevicePreferenceInput `json:"devicePreferences" binding:"required"`
 }
 
 // Since we are updating, we should have the ID
@@ -184,16 +184,28 @@ func UpdateDevicePreferences(c *gin.Context) {
 		return
 	}
 
-	devicePreferences := make([]models.DevicePreference, len(input.DevicePreferenceInputs))
+	// gORM's association batch update wasn't behaving as I wanted it to, so I decided to build the query raw
+	// in order to do a batch update.
+
+	queryString := "INSERT INTO device_preferences (id,icon,sort_position,visible) VALUES "
+
+	// Better to do this in a batch.
+	// devicePreferences := make([]models.DevicePreference, len(input.DevicePreferenceInputs))
 	for i, DevicePreferenceInput := range input.DevicePreferenceInputs {
-		devicePreferences[i] = models.DevicePreference{
-			DeviceID: DevicePreferenceInput.DeviceID,
-			Icon: DevicePreferenceInput.Icon,
-			SortPosition: DevicePreferenceInput.SortPosition,
-			Visible: *DevicePreferenceInput.Visible,
+		preferenceValues := fmt.Sprintf("(%d,'%s',%d,%t)",
+			DevicePreferenceInput.ID,
+			DevicePreferenceInput.Icon,
+			DevicePreferenceInput.SortPosition,
+			*DevicePreferenceInput.Visible,
+		)
+		queryString = queryString + preferenceValues
+
+		if (i != len(input.DevicePreferenceInputs)-1) {
+			queryString = queryString + ","
 		}
 	}
-	database.Connection.Model(&user).Association("DevicePreferences").Replace(devicePreferences)
+	queryString = queryString + " ON DUPLICATE KEY UPDATE icon=VALUES(icon), sort_position=VALUES(sort_position), visible=VALUES(visible)"
+	fmt.Println("holy queryString", queryString)
 
 	c.JSON(http.StatusOK, gin.H{})
 }
