@@ -1,11 +1,13 @@
 <script setup>
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
 import { useDevicePreferencesStore } from '@/stores/devicePreferences'
+import LoginForm from '@/components/LoginForm.vue'
 
-import Popup from '@/components/Popup.vue'
+// import Popup from '@/components/Popup.vue'
 
 const authStore = useAuthStore()
 
@@ -15,47 +17,47 @@ const { username } = storeToRefs(userStore)
 </script>
 
 <template>
-    <q-header elevated class="bg-primary text-white">
-      <q-toolbar>
-        <q-toolbar-title>
-          <q-avatar>
-            <img src="../../../scryer.png" />
-          </q-avatar>
-          <p v-if="username !== null">Welcome to Scryer, {{username}}!</p>
-          <p v-else>Welcome to Scryer!</p>
-        </q-toolbar-title>
+  <q-header elevated class="bg-primary text-white">
+    <q-toolbar>
+      <q-toolbar-title>
+        <q-avatar>
+          <img src="../../../scryer.png" />
+        </q-avatar>
+        <span v-if="username !== null">Welcome to Scryer, {{username}}!</span>
+        <span v-else>Welcome to Scryer!</span>
+      </q-toolbar-title>
 
-<!--         <q-btn icon="login" color="secondary" @click="prompt = true" />
-
-      <q-dialog v-model="prompt" persistent>
-        <q-card style="min-width: 350px; MIN-HEIGHT: 350px;">
-          fuckera
-            <q-btn flat label="Cancel" v-close-popup />
-        </q-card>
-      </q-dialog> -->a
-
-      <q-btn v-if="username !== null" clickable><q-icon name="save" @click="devicePreferencesStore.updateDevicePreferences()" /></q-btn>
-      <q-btn v-if="username === null" label="Login" color="primary" @click="$refs.dialogRef.show(); " />
-      <q-btn v-else label="Logout" color="primary" @click="authStore.logout()"/>
-      <Popup />
-
+      <div>
+        <q-btn v-if="username !== null" clickable><q-icon name="save" @click="devicePreferencesStore.updateDevicePreferences()" /></q-btn>
+        <q-btn v-if="username === null" label="Login" color="primary" @click="login = true" />
+          <q-menu>
+            <LoginForm v-if="register === false" @toggle-forms="toggleForms" />
+            <RegistrationForm v-else @toggle-forms="toggleForms" />
+          </q-menu>
+        <q-btn v-if="username !== null" label="Logout" color="primary" @click="authStore.logout()"/>
+      </div>
     </q-toolbar>
 
-    <q-ajax-bar :hijack-filter="filterAjaxBar" />
+    <q-ajax-bar />
   </q-header>
+
+
+
 </template>
 
 <script>
 export default {
-  setup() {
-    // TODO: q-ajax-bar dont work
+  data() {
     return {
-      filterAjaxBar(url) {
-        // We only want to display the ajax bar when we go to save user preferences.
-        // return /localhost:5173\/user\/preferences/.test(url)
-        return true
-      }
+      register: false,
     }
-  }
+  },
+  methods: {
+    toggleForms() {
+      console.log('toggled forms', this.register)
+      this.register = !this.register
+      console.log('after', this.register)
+    },
+  },
 }
 </script>

@@ -1,21 +1,15 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 
-import LoginForm from './LoginForm.vue'
-import RegistrationForm from './RegistrationForm.vue'
-
 import { useDeviceStore } from '@/stores/device'
 import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
 const deviceStore = useDeviceStore()
 const { getDeviceIcon } = useDevicePreferencesStore()
 const { devices, visibleDevices } =  storeToRefs(deviceStore)
-
 </script>
 
 <template>
-	<LoginForm />
-	<RegistrationForm />
 	<GMapMap
 		:center="center"
 		:zoom="6"
@@ -34,6 +28,7 @@ const { devices, visibleDevices } =  storeToRefs(deviceStore)
 export default {
 	props: {
 		center: String,
+		setCenter: Function,
 	}
 }
 </script>

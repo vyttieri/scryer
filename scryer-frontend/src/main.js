@@ -22,9 +22,9 @@ pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 
 app.use(Quasar, {
-	plugins: {
-		Dialog
-	},
+	// plugins: {
+	// 	Dialog
+	// },
 })
 
 app.mount('#app')
