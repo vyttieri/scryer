@@ -64,6 +64,26 @@ func (user *User) FindDevicePreferences(devicePreferences *[]DevicePreference) e
 	return nil
 }
 
+/*
+	I was grappling for a bit with a way to do this more efficiently than a query per model.
+
+	gORM doesn't have great support for batch updates. MySQL supports an INSERT INTO ON DUPLICATE KEY
+	which will accomplish what I want, but that would require constructing the query string manually.
+
+	gORM also has a .Replace method for associations, but that simply creates new rows and nulls out the association on the old ones.
+	That's not ideal either. So I decided to stick with the good old update per row, which isn't the end of the world here,
+	as we're only updating 6 rows at a time. If this project were to scale I would defintely want to implemenet a batch solution.
+*/
 func (user *User) UpdateDevicePreferences(devicePreferences *[]DevicePreference) error {
-	return nil
+	var err error
+
+	for _, devicePreference := range *devicePreferences {
+		err := database.Connection.Model(&devicePreference).Where("user_id = ?", user.ID).Updates(devicePreference).Error
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return err
 }

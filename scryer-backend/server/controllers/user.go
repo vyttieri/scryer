@@ -184,28 +184,21 @@ func UpdateDevicePreferences(c *gin.Context) {
 		return
 	}
 
-	// gORM's association batch update wasn't behaving as I wanted it to, so I decided to build the query raw
-	// in order to do a batch update.
 
-	queryString := "INSERT INTO device_preferences (id,icon,sort_position,visible) VALUES "
-
-	// Better to do this in a batch.
-	// devicePreferences := make([]models.DevicePreference, len(input.DevicePreferenceInputs))
-	for i, DevicePreferenceInput := range input.DevicePreferenceInputs {
-		preferenceValues := fmt.Sprintf("(%d,'%s',%d,%t)",
-			DevicePreferenceInput.ID,
-			DevicePreferenceInput.Icon,
-			DevicePreferenceInput.SortPosition,
-			*DevicePreferenceInput.Visible,
-		)
-		queryString = queryString + preferenceValues
-
-		if (i != len(input.DevicePreferenceInputs)-1) {
-			queryString = queryString + ","
+	devicePreferences := make([]models.DevicePreference, len(input.DevicePreferenceInputs))
+	for i, devicePreferenceInput := range input.DevicePreferenceInputs {
+		devicePreferences[i] = models.DevicePreference{
+			Icon: devicePreferenceInput.Icon,
+			SortPosition: devicePreferenceInput.SortPosition,
+			Visible: *devicePreferenceInput.Visible,
 		}
 	}
-	queryString = queryString + " ON DUPLICATE KEY UPDATE icon=VALUES(icon), sort_position=VALUES(sort_position), visible=VALUES(visible)"
-	fmt.Println("holy queryString", queryString)
+	if err := user.UpdateDevicePreferences(&devicePreferences); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		c.Abort()
+
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{})
 }
