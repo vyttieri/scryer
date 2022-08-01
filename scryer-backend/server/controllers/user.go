@@ -67,9 +67,11 @@ func Logout(c *gin.Context) {
 	session.Delete("ID")
 	if err := session.Save(); err != nil {
 		fmt.Println("Failed to save session", err)
-		panic(err)
 
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		c.Abort()
+
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{})
@@ -128,7 +130,7 @@ func CreateUser(c *gin.Context) {
 		}
 	}
 	user.DevicePreferences = devicePreferences
-
+	fmt.Println("generated devicePreferences: ", devicePreferences)
 	// Create User & DevicePreferences in DB
 	if err := user.Create(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
@@ -184,14 +186,16 @@ func UpdateDevicePreferences(c *gin.Context) {
 		return
 	}
 
-
 	devicePreferences := make([]models.DevicePreference, len(input.DevicePreferenceInputs))
 	for i, devicePreferenceInput := range input.DevicePreferenceInputs {
 		devicePreferences[i] = models.DevicePreference{
+			ID: devicePreferenceInput.ID,
 			Icon: devicePreferenceInput.Icon,
 			SortPosition: devicePreferenceInput.SortPosition,
 			Visible: *devicePreferenceInput.Visible,
 		}
+
+		fmt.Println("devicePreference visible", *devicePreferenceInput.Visible)
 	}
 	if err := user.UpdateDevicePreferences(&devicePreferences); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{})

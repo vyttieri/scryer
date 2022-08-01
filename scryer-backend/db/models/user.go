@@ -78,7 +78,13 @@ func (user *User) UpdateDevicePreferences(devicePreferences *[]DevicePreference)
 	var err error
 
 	for _, devicePreference := range *devicePreferences {
-		err := database.Connection.Model(&devicePreference).Where("user_id = ?", user.ID).Updates(devicePreference).Error
+
+		// Using a map for the Updates call is necessary because otherwise gORM will not update "zero" values i.e. 0 or false.
+		err := database.Connection.Model(&devicePreference).Where("user_id = ?", user.ID).Updates(map[string]interface{}{
+			"icon": devicePreference.Icon,
+			"sort_position": devicePreference.SortPosition,
+			"visible": devicePreference.Visible,
+		}).Error
 
 		if err != nil {
 			return err
