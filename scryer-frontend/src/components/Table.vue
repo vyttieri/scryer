@@ -6,21 +6,39 @@ import { storeToRefs } from 'pinia'
 import { useDeviceStore } from '@/stores/device'
 import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
-const { devices, loading, error } = storeToRefs(useDeviceStore())
-const { getDeviceVisibility, setDeviceVisibility, getDeviceIcon, setDeviceIcon } = useDevicePreferencesStore()
+const deviceStore = useDeviceStore()
+const { sortedDevices, loading, error } = storeToRefs(deviceStore)
+
+const devicePreferencesStore = useDevicePreferencesStore()
+const { getDeviceVisibility, setDeviceVisibility, getDeviceIcon, setDeviceIcon, setSortPosition } = devicePreferencesStore
+
+function onListDrag(e) {
+  // The only drag event we care about right now is if something is moved to a new place
+  if (e.moved) {
+    setSortPosition(e.moved.element.device_id, e.moved.newIndex)
+  }
+}
 </script>
 
 <template>
-  <q-list bordered padding separator q-hoverable v-if="devices">
+  <q-list bordered padding separator q-hoverable v-if="sortedDevices">
+    <q-item class="list-header">
+      <q-item-section>
+      </q-item-section>
+      <q-item-section>Device Name</q-item-section>
+      <q-item-section>Active State</q-item-section>
+      <q-item-section>Drive Status</q-item-section>
+    </q-item>
     <draggable
       group="devices"
-      :list="devices"
+      :list="sortedDevices"
       @start="dragging = true"
       @end="dragging = false"
       item-key="device_id"
+      @change="onListDrag"
     >
       <template #item="{ element }">
-         <q-item bordered separator class="list-device">
+         <q-item class="list-device">
             <q-item-section>
               <q-icon clickable v-if="getDeviceVisibility(element)" color="primary" name="visibility" @click="setDeviceVisibility(element)" />
               <q-icon clickable v-else color="negative" name="visibility_off" @click="setDeviceVisibility(element)" />
@@ -42,13 +60,17 @@ const { getDeviceVisibility, setDeviceVisibility, getDeviceIcon, setDeviceIcon }
 </template>
 
 <style scoped>
-  .list-device {
-    border:  1px solid #eee;
-  }
-  .table { height: 500px; width:  500px;}
-  .sortable-chosen {
-    background:  #eee;
-  }
+.list-header {
+  font-weight:  bold;
+}
+.list-device {
+  border:  1px solid #eee;
+}
+
+/* Applies when list element is being dragged */
+.sortable-chosen {
+  background:  #eee;
+}
 </style>
 
 <script>

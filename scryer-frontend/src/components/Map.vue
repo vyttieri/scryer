@@ -6,7 +6,7 @@ import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
 const deviceStore = useDeviceStore()
 const { getDeviceIcon } = useDevicePreferencesStore()
-const { devices, visibleDevices } =  storeToRefs(deviceStore)
+const { visibleDevices } =  storeToRefs(deviceStore)
 </script>
 
 <template>

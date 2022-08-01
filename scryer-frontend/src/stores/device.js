@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 
 import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
@@ -10,14 +10,17 @@ export const useDeviceStore = defineStore({
     error: null,
   }),
   getters: {
-    // deviceIds: state => state.devices.reduce(device => device.device_id),
-    // sortedDevices: state => state.devices.sortBy((a, b) => a > b ? 1 : -1)
+    sortedDevices: state => {
+      const { sortPositions }  = storeToRefs(useDevicePreferencesStore())
+      let deviceMap = {}
+      sortPositions.value.forEach((deviceId, i) => deviceMap[deviceId] = i)
+      console.log('dedvice map', deviceMap)
+      console.log('what is devices', state.devices)
+      return state.devices.sort((a, b) => deviceMap[a.device_id] > deviceMap[b.device_id] ? 1 : -1)
+    },
     visibleDevices: state => {
       const { getDeviceVisibility } = useDevicePreferencesStore()
-      console.log('in visibleDevices')
-      console.log('devices', state.devices)
-      state.devices.forEach(device => console.log(device.latest_accurate_device_point.lat_lng))
-      console.log('visibleDevices', state.devices.filter(device => getDeviceVisibility(device)))
+
       return state.devices.filter(device => getDeviceVisibility(device))
     },
   },

@@ -4,8 +4,9 @@ export const useDevicePreferencesStore = defineStore({
   id: 'devicePreferences',
   state: () => ({
     devicePreferences: {
-      // visible: true, icon: 'car', sortPosition: 1
-    }
+    },
+    // Storing sortPositions as an ordered list so we can do reordering with VueDraggable.
+    sortPositions: [],
   }),
   persist: true,
   getters: {
@@ -16,6 +17,9 @@ export const useDevicePreferencesStore = defineStore({
     },
     getDeviceIcon: state => {
       return device => state.devicePreferences[device.device_id].icon
+    },
+    getDeviceSortPosition: state => {
+      return device => state.devicePreferences[device.device_id].sortPosition
     },
     // for backend consumption:
     jsonDevicePreferences: state => {
@@ -29,12 +33,21 @@ export const useDevicePreferencesStore = defineStore({
       console.log('logging devices from preferences', devices)
 
       let devicePreferences = devices.reduce((acc, device) => {
-        return { ...acc, [device.device_id]: { visible: true, icon: 'directions_car', sortPosition: 0 } }
+        return { ...acc, [device.device_id]: { visible: true, icon: 'directions_car' } }
       }, {})
 
-      // spread will overwrite with second object, so we're effectively only adding new devices
+      // spread will overwrite with second object, so we're effectively only adding new devices here
       this.devicePreferences = { ...devicePreferences, ...this.devicePreferences}
+
+      let sortPositions = devices
+        .sort((deviceA, deviceB) => deviceA.display_name > deviceB.display_name ? 1 : -1)
+        .map(device => device.device_id)
+      if (this.sortPositions === []) {
+        this.sortPositions = sortPositions
+      }
+
       console.log('updated devicePreferences', devicePreferences)
+      console.log('updated sortPositions', sortPositions)
     },
     setDeviceVisibility(device) {
       console.log('we clicked the device icon', device, device.device_id)
@@ -58,6 +71,16 @@ export const useDevicePreferencesStore = defineStore({
     },
     setDeviceIcon(deviceId, icon) {
       this.devicePreferences[deviceId].icon = icon
-    }
+    },
+    setSortPosition(deviceId, newPosition) {
+      console.log(deviceId, newPosition)
+
+      // remove old position
+      this.sortPositions = this.sortPositions.filter(listDeviceId => deviceId !== listDeviceId)
+      console.log('intermediate', this.sortPositions)
+      // insert at new position
+      this.sortPositions.splice(newPosition, 0, deviceId)
+      console.log('final', this.sortPositions)
+    },
   },
 })
