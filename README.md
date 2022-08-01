@@ -41,11 +41,11 @@
     - - ~visible~
     - - icon
     - - sortPosition
-8. Save user preferences on back-end
-    - Create user preferences table
-    - Send user preferences along with register action, create with user
-    - Send user preferences back with login action
-    - UPDATE user preferences on change
+8. ~Save user preferences on back-end~
+    - ~Create user preferences table~
+    - ~Send user preferences along with register action, create with user~
+    - ~Send user preferences back with login action~
+    - ~UPDATE user preferences on change~
 9. Prettify frontend
 
 ### Structure
