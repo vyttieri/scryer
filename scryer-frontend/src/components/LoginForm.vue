@@ -12,3 +12,15 @@ const authStore = useAuthStore()
     <div v-if="errors">{{errors.ApiError}}</div>
   </q-form>
 </template>
+
+<script>
+  export default {
+    data() {
+      return {
+        errors: null,
+        username: '',
+        password: '',
+      }
+    }
+  }
+</script>

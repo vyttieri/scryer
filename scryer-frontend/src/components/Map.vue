@@ -27,7 +27,7 @@ const { devices, visibleDevices } =  storeToRefs(deviceStore)
 <script>
 export default {
 	props: {
-		center: String,
+		center: { lat: String, lng: String, },
 		setCenter: Function,
 	}
 }

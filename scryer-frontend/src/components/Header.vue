@@ -1,16 +1,13 @@
 <script setup>
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
 import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 import LoginForm from '@/components/LoginForm.vue'
 
-// import Popup from '@/components/Popup.vue'
 
 const authStore = useAuthStore()
-
 const devicePreferencesStore = useDevicePreferencesStore()
 const userStore = useUserStore()
 const { username } = storeToRefs(userStore)
@@ -40,9 +37,6 @@ const { username } = storeToRefs(userStore)
 
     <q-ajax-bar />
   </q-header>
-
-
-
 </template>
 
 <script>
@@ -54,9 +48,7 @@ export default {
   },
   methods: {
     toggleForms() {
-      console.log('toggled forms', this.register)
       this.register = !this.register
-      console.log('after', this.register)
     },
   },
 }
