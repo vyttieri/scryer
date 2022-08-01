@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useDevicePreferencesStore = defineStore({
+export const useDevicePreferenceStore = defineStore({
   id: 'devicePreferences',
   state: () => ({
     devicePreferences: {

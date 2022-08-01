@@ -2,11 +2,11 @@
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
 
-import { useDeviceStore } from './stores/device'
+import { useDeviceStore } from '@/stores/device'
 
-import Header from './components/Header.vue'
-import Map from './components/Map.vue'
-import Table from './components/Table.vue'
+import Header from '@/components/Header.vue'
+import Map from '@/components/Map.vue'
+import Table from '@/components/Table.vue'
 
 const { loading, error } = storeToRefs(useDeviceStore())
 const { fetchDevices }  = useDeviceStore()

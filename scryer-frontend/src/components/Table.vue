@@ -4,13 +4,13 @@ import draggable from 'vuedraggable'
 import { storeToRefs } from 'pinia'
 
 import { useDeviceStore } from '@/stores/device'
-import { useDevicePreferencesStore } from '@/stores/devicePreferences'
+import { useDevicePreferenceStore } from '@/stores/devicePreferences'
 
 const deviceStore = useDeviceStore()
 const { sortedDevices, loading, error } = storeToRefs(deviceStore)
 
-const devicePreferencesStore = useDevicePreferencesStore()
-const { getDeviceVisibility, setDeviceVisibility, getDeviceIcon, setDeviceIcon, setSortPosition } = devicePreferencesStore
+const devicePreferenceStore = useDevicePreferenceStore()
+const { getDeviceVisibility, setDeviceVisibility, getDeviceIcon, setDeviceIcon, setSortPosition } = devicePreferenceStore
 
 function onListDrag(e) {
   // The only drag event we care about right now is if something is moved to a new place

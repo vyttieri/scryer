@@ -78,7 +78,6 @@ func Logout(c *gin.Context) {
 
 // I really dislike "Preference" vs "Preferences", they should both be "Preferences"!
 // But I think it's a necessary evil to distinguish between the singular and the plural.
-// TODO: Wtf is going on with this binding bool situation
 type DevicePreferenceInput struct {
 	DeviceID string `json:"deviceId" binding:"required"`
 	SortPosition uint `json:"sortPosition" binding:"required"`

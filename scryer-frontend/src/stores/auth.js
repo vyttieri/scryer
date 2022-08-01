@@ -1,7 +1,7 @@
 import { defineStore, storeToRefs } from 'pinia'
 
 import { useDeviceStore } from '@/stores/device'
-import { useDevicePreferencesStore } from '@/stores/devicePreferences'
+import { useDevicePreferenceStore } from '@/stores/devicePreferences'
 import { useUserStore } from '@/stores/user'
 
 export const useAuthStore = defineStore({
@@ -43,7 +43,7 @@ export const useAuthStore = defineStore({
                   },
             {})
             console.log('setting devicePreferences with:', devicePreferences)
-            useDevicePreferencesStore().setDevicePreferences(devicePreferences)
+            useDevicePreferenceStore().setDevicePreferences(devicePreferences)
           })
 
       } catch (error) {
@@ -63,9 +63,9 @@ export const useAuthStore = defineStore({
                 // reset devicePreferences store. Basically reset it to null and then init
                 // from devices list again
                 const { devices } = storeToRefs(useDeviceStore())
-                const devicePreferencesStore = useDevicePreferencesStore()
-                devicePreferencesStore.$reset()
-                devicePreferencesStore.initOrPatchDevicePreferences(devices.value)
+                const devicePreferenceStore = useDevicePreferenceStore()
+                devicePreferenceStore.$reset()
+                devicePreferenceStore.initOrPatchDevicePreferences(devices.value)
                 console.log('successfully logged out')
               } else {
                 // panic at the disco

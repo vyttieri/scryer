@@ -3,13 +3,13 @@ import { storeToRefs } from 'pinia'
 
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
-import { useDevicePreferencesStore } from '@/stores/devicePreferences'
+import { useDevicePreferenceStore } from '@/stores/devicePreferences'
 
 import LoginForm from '@/components/LoginForm.vue'
 import RegistrationForm from '@/components/RegistrationForm.vue'
 
 const authStore = useAuthStore()
-const devicePreferencesStore = useDevicePreferencesStore()
+const devicePreferenceStore = useDevicePreferenceStore()
 const userStore = useUserStore()
 const { username } = storeToRefs(userStore)
 </script>
@@ -26,7 +26,7 @@ const { username } = storeToRefs(userStore)
       </q-toolbar-title>
 
       <div>
-        <q-btn v-if="username !== null" clickable><q-icon name="save" @click="devicePreferencesStore.updateDevicePreferences()" /></q-btn>
+        <q-btn v-if="username !== null" clickable><q-icon name="save" @click="devicePreferenceStore.updateDevicePreferences()" /></q-btn>
         <q-btn v-if="username === null" label="Login" color="primary" @click="login = true" />
         <q-menu v-if="username === null" style="padding: 4px;">
             <LoginForm v-if="register === false" @toggle-forms="toggleForms" />

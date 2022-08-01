@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 import { useAuthStore } from '@/stores/auth'
-import { useDevicePreferencesStore } from '@/stores/devicePreferences'
+import { useDevicePreferenceStore } from '@/stores/devicePreferences'
 
 export const useUserStore = defineStore({
 	id: 'user',
@@ -16,7 +16,7 @@ export const useUserStore = defineStore({
 				username,
 				password,
 				passwordConfirmation,
-				devicePreferences: useDevicePreferencesStore().jsonDevicePreferences,
+				devicePreferences: useDevicePreferenceStore().jsonDevicePreferences,
 			}
 			console.log('stringify user:', JSON.stringify(jsonUser))
 		 await fetch('http://localhost:5173/register', {

@@ -2,10 +2,10 @@
 import { storeToRefs } from 'pinia'
 
 import { useDeviceStore } from '@/stores/device'
-import { useDevicePreferencesStore } from '@/stores/devicePreferences'
+import { useDevicePreferenceStore } from '@/stores/devicePreferences'
 
 const deviceStore = useDeviceStore()
-const { getDeviceIcon } = useDevicePreferencesStore()
+const { getDeviceIcon } = useDevicePreferenceStore()
 const { visibleDevices } =  storeToRefs(deviceStore)
 </script>
 
