@@ -1,17 +1,14 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 
-import { useUserStore } from './user'
+import { useDevicePreferencesStore } from '@/stores/devicePreferences'
+import { useUserStore } from '@/stores/user'
 
 export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({
     error: null,
     loading: false,
-    accessToken: localStorage.getItem('accessToken'),
   }),
-  getters: {
-    loggedIn: state => state.accessToken !== null
-  },
   actions: {
     async login(username, password) {
       this.loading = true
@@ -27,31 +24,48 @@ export const useAuthStore = defineStore({
           body: JSON.stringify({ username: username, password: password })
         })
           .then(response => response.json())
-          .then(result => {
-            this.accessToken = result.token
+          .then(data => {
+            console.log(data.user)
+            useUserStore().setUser(data.user.id, data.user.username)
 
-            localStorage.setItem('accessToken', result.token)
-            console.log(result.token)
-
-            useUserStore().getUser()
+            // convert from backend [] format to frontend {} format
+            const devicePreferences = data.user.devicePreferences.reduce((acc, devicePreference) => {
+                    return {
+                      ...acc,
+                      [devicePreference.deviceId]: {
+                        id: devicePreference.id,
+                        icon: devicePreference.icon,
+                        sortOrder: devicePreference.sortOrder,
+                        visible: devicePreference.visible,
+                      }
+                    }
+                  },
+            {})
+            console.log('setting devicePreferences with:', devicePreferences)
+            useDevicePreferencesStore().setDevicePreferences(devicePreferences)
           })
 
       } catch (error) {
         console.log('got error logging in', error)
         this.error = error
       }
-
     },
-    logout() {
-      this.accessToken = null
-      localStorage.removeItem('accessToken')
-    },
-    async refreshToken() {
+    async logout() {
       try {
-        const accessToken = await fetch('http://localhost:5173/auth/refresh_token')
-      } catch (error) {
-
-      }
-    }
+          console.log('logging out')
+          await fetch('http://localhost:5173/logout')
+            .then(response => {
+              if (response.status === 200) {
+                useUserStore().setUser(null, null)
+                console.log('successfully logged out')
+              } else {
+                // panic at the disco
+              }
+            })
+        } catch (error) {
+          console.log('got error logging in', error)
+          this.error = error
+        }
+    },
   }
 })

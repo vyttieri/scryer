@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var JwtSecretKey, ApiKey, DbHost, DbPort, DbName, DbUser, DbUserPassword string
+var SessionSecret, ApiKey, DbHost, DbPort, DbName, DbUser, DbUserPassword string
 
 func LoadEnv() {
 	fmt.Println("Loading environment")
@@ -15,14 +15,14 @@ func LoadEnv() {
 		panic(err)
 	}
 
-	JwtSecretKey = os.Getenv("JWT_SECRET_KEY")
 	ApiKey = os.Getenv("ONESTEPGPS_API_KEY")
+	SessionSecret = os.Getenv("SESSION_SECRET")
+
 	DbHost = os.Getenv("DB_HOST")
 	DbPort = os.Getenv("DB_PORT")
 	DbName = os.Getenv("DB_NAME")
 	DbUser = os.Getenv("DB_USER")
 	DbUserPassword = os.Getenv("DB_USER_PASSWORD")
 
-	fmt.Println(ApiKey)
 	fmt.Println("Environment loaded")
 }

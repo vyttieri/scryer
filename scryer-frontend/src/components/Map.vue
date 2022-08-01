@@ -1,17 +1,15 @@
 <script setup>
-	import { storeToRefs } from 'pinia'
+import { storeToRefs } from 'pinia'
 
-	import LoginForm from './LoginForm.vue'
-	import RegistrationForm from './RegistrationForm.vue'
+import LoginForm from './LoginForm.vue'
+import RegistrationForm from './RegistrationForm.vue'
 
-	import { useDeviceStore } from '../stores/device'
-	import { usePreferencesStore } from '../stores/preferences'
+import { useDeviceStore } from '@/stores/device'
+import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
-	const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
-	const { center } = storeToRefs(usePreferencesStore())
+const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
 </script>
 
-<!-- TODO: Centering seems wrong; device_point_detail is null -->
 <template>
 	<LoginForm />
 	<RegistrationForm />
@@ -21,8 +19,18 @@
 	>
 		<GMapMarker
 			:key="device.device_id + '-marker'"
-			:position="device.latest_accurate_device_point.device_point_detail.lat_lng"
 			v-for="device in visibleDevices"
+			:position="device.latest_accurate_device_point.device_point_detail.lat_lng"
+			@click="$emit('set-center', device.latest_accurate_device_point.device_point_detail.lat_lng)"
+			:label="{ className: 'q-icons material-icons', fontFamily: 'Material Icons', text: 'directions_car', fontSize: '18px', color: '#fff' }"
 		/>
 	</GMapMap>
 </template>
+
+<script>
+export default {
+	props: {
+		center: String,
+	}
+}
+</script>

@@ -5,6 +5,7 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 
 	"scryer-backend/env"
 )
@@ -24,7 +25,7 @@ func Connect() {
 	fmt.Println("Connecting to database: ", connectionString)
 
 	var dbError error
-	Connection, dbError = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
+	Connection, dbError = gorm.Open(mysql.Open(connectionString), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
 	if dbError != nil {
 		panic("Something went wrong connecting to database")
 	}

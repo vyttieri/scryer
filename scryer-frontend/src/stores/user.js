@@ -1,49 +1,40 @@
 import { defineStore } from 'pinia'
 
-import { useAuthStore } from './auth'
-import { usePreferencesStore } from './preferences'
+import { useAuthStore } from '@/stores/auth'
+import { useDevicePreferencesStore } from '@/stores/devicePreferences'
 
 export const useUserStore = defineStore({
 	id: 'user',
 	state: () => ({
-		userId: '',
-		username: ''
+		userId: null,
+		username: null
 	}),
 	actions: {
 		async register(username, password, passwordConfirmation) {
-		 const result = await fetch('http://localhost:5173/users', {
-					method: 'POST',
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({ username: username, password: password, passwordConfirmation: passwordConfirmation }),
+			const jsonUser = {
+				username,
+				password,
+				passwordConfirmation,
+				devicePreferences: useDevicePreferencesStore().jsonDevicePreferences,
+			}
+			console.log('stringify user:', JSON.stringify(jsonUser))
+		 await fetch('http://localhost:5173/register', {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(jsonUser),
 			})
 		 	.then(response => response.json())
-
-		 console.log('result', result)
-		 this.userId = result.userId
-		 this.username = result.username
-
-		 const authResult = useAuthStore().login(username, password)
+		 	.then(result => {
+   			  this.userId = result.user.userId
+			  this.username = result.user.username
+		 	})
 		},
-		async getUser() {
-			console.log('getting user')
-			var user = await fetch(`http://localhost:5173/users/${userId}`, {
-				method: 'GET',
-				headers: {
-					'Authorization': `Bearer ${useAuthStore().accessToken}`
-				},
-			})
-				.then(response => response.json())
-
-			this.userId = result.userId
-			this.username = result.username
-
-			console.log('got user', user)
-		},
-		async updatePreferences(user) {
-			'asdf'
+		setUser(userId, username) {
+			this.userId = userId
+			this.username = username
 		},
 	}
 })

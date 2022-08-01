@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-contrib/cache"
@@ -15,7 +16,7 @@ import (
 
 func AuthRequired(c *gin.Context) {
 	session := sessions.Default(c)
-	user := session.Get("user")
+	user := session.Get("ID")
 	if user == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{})
 		c.Abort()
@@ -28,7 +29,7 @@ func Run() {
 	router := gin.Default()
 	router.LoadHTMLFiles("templates/index.html")
 
-	router.Use(sessions.Sessions("session", cookie.NewStore([]byte("SECRETMOVEELSEWHERE"))))
+	router.Use(sessions.Sessions("session", cookie.NewStore([]byte(os.Getenv("SESSION_SECRET")))))
 
 	router.GET("/", controllers.Index)
 
@@ -39,12 +40,13 @@ func Run() {
 	// TODO: Error handling
 	router.GET("/ping", cache.CachePage(store, time.Hour, controllers.OneStepGpsData))
 
+	router.POST("/register", controllers.CreateUser)
+	router.POST("/login", controllers.Login)
+
 	private := router.Group("/")
 	private.Use(AuthRequired)
-
-
-	router.POST("/users", controllers.CreateUser)
-	router.POST("/login", controllers.Login)
+	private.GET("/logout", controllers.Logout)
+	private.PUT("/user/preferences", controllers.UpdateDevicePreferences)
 
 	router.Run()
 }
