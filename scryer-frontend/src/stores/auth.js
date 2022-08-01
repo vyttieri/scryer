@@ -10,6 +10,13 @@ export const useAuthStore = defineStore({
     error: null,
     loading: false,
   }),
+  getters: {
+    loggedIn: state => {
+      const { username } = storeToRefs(useUserStore())
+
+      return username.value !== null
+    }
+  },
   actions: {
     async login(username, password) {
       this.loading = true

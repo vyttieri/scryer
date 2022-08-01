@@ -9,7 +9,11 @@ import LoginForm from '@/components/LoginForm.vue'
 import RegistrationForm from '@/components/RegistrationForm.vue'
 
 const authStore = useAuthStore()
+const { loggedIn } = storeToRefs(authStore)
+const { logout } = authStore
+
 const devicePreferenceStore = useDevicePreferenceStore()
+
 const userStore = useUserStore()
 const { username } = storeToRefs(userStore)
 </script>
@@ -21,18 +25,18 @@ const { username } = storeToRefs(userStore)
         <q-avatar>
           <img src="../../../scryer.png" />
         </q-avatar>
-        <span v-if="username !== null">Welcome to Scryer, {{username}}!</span>
+        <span v-if="loggedIn">Welcome to Scryer, {{ username }}!</span>
         <span v-else>Welcome to Scryer!</span>
       </q-toolbar-title>
 
       <div>
-        <q-btn v-if="username !== null" clickable><q-icon name="save" @click="devicePreferenceStore.updateDevicePreferences()" /></q-btn>
-        <q-btn v-if="username === null" label="Login" color="primary" @click="login = true" />
-        <q-menu v-if="username === null" style="padding: 4px;">
+        <q-btn v-if="loggedIn" clickable><q-icon name="save" @click="devicePreferenceStore.updateDevicePreferences()" /></q-btn>
+        <q-btn v-if="!loggedIn" label="Login" color="primary" @click="login = true" />
+        <q-menu v-if="!loggedIn" style="padding: 4px;">
             <LoginForm v-if="register === false" @toggle-forms="toggleForms" />
             <RegistrationForm v-else @toggle-forms="toggleForms" />
         </q-menu>
-        <q-btn v-if="username !== null" label="Logout" color="primary" @click="authStore.logout()"/>
+        <q-btn v-if="loggedIn" label="Logout" color="primary" @click="logout()"/>
       </div>
     </q-toolbar>
 
