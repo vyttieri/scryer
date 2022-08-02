@@ -12,7 +12,7 @@ import (
 
 
 type createUserInput struct {
-	Username string `json:"username" binding:"required,gte=1lte=32"`
+	Username string `json:"username" binding:"required,gte=1,lte=32"`
 	Password string `json:"password" binding:"required,gte=1,lte=64"`
 	PasswordConfirmation string `json:"passwordConfirmation" binding:"required,gte=1,lte=64"`
 
