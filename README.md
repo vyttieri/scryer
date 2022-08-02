@@ -33,7 +33,7 @@
     - `cd scryer-frontend/`
     - `npm install`
     - `cp .env_template .env` (in `scryer-frontend/`), and fill out the env variables:
-        - `VITE_GOOGLE_MAPS_API_KEY`
+        - `VITE_GOOGLE_MAPS_API_KEY` (this is your API Key from Google for Google Maps API)
 
 ### Run
 - Database: `mysql.server start` (MacOS command)
