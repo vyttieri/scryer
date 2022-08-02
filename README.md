@@ -64,3 +64,5 @@
 - The OneStepGPS API endpoint is just a passthrough endpoint right now. It hits the API and then passes all that data back to the client. It would be good to tailor the endpoint to serve only the data the client needs to consume.
 - Production readiness - At a minimum, different environments, using a real logger, adding a build process to compile JS.
 - Password Hashing process could use, at a minimum, salts, for additional security. Ideally use a pre-built implementation that is secure.
+- Better error handling. The error handling is pretty simple and takes a one-size-fits-all approach. There could be more diverse error handling depending on what went wrong.
+- Better data validations. The data validations are more a proof of concept than anything else.

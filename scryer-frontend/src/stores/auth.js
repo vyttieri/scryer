@@ -30,7 +30,13 @@ export const useAuthStore = defineStore({
           },
           body: JSON.stringify({ username: username, password: password })
         })
-          .then(response => response.json())
+          .then(response => {
+            if (response.ok) {
+              return response.json()
+            } else {
+              throw new Error()
+            }
+          })
           .then(data => {
             useUserStore().setUser(data.user.id, data.user.username)
 
@@ -49,32 +55,27 @@ export const useAuthStore = defineStore({
             {})
             useDevicePreferenceStore().setDevicePreferences(devicePreferences)
           })
-
       } catch (error) {
-        this.error = error
+        this.error = 'Failed to login'
       }
     },
     async logout() {
-      try {
-          await fetch('http://localhost:5173/logout')
-            .then(response => {
-              if (response.status === 200) {
-                // reset user store
-                useUserStore().$reset()
+      await fetch('http://localhost:5173/logout')
+        .then(response => {
+          if (response.status === 200) {
+            // reset user store
+            useUserStore().$reset()
 
-                // reset devicePreferences store. Basically reset it to null and then init
-                // from devices list again
-                const { devices } = storeToRefs(useDeviceStore())
-                const devicePreferenceStore = useDevicePreferenceStore()
-                devicePreferenceStore.$reset()
-                devicePreferenceStore.initOrPatchDevicePreferences(devices.value)
-              } else {
-                // panic at the disco
-              }
-            })
-        } catch (error) {
-          this.error = error
-        }
+            // reset devicePreferences store. Basically reset it to null and then init
+            // from devices list again
+            const { devices } = storeToRefs(useDeviceStore())
+            const devicePreferenceStore = useDevicePreferenceStore()
+            devicePreferenceStore.$reset()
+            devicePreferenceStore.initOrPatchDevicePreferences(devices.value)
+          } else {
+            throw new Error("failed to logout, ", response.status)
+          }
+        })
     },
   }
 })

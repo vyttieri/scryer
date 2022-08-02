@@ -1,6 +1,10 @@
 <script setup>
+import { storeToRefs } from 'pinia'
+
 import { useUserStore } from '@/stores/user'
-const { register } = useUserStore()
+const userStore = useUserStore()
+const { register } = userStore
+const { error } = storeToRefs(userStore)
 </script>
 
 <template>
@@ -30,9 +34,9 @@ const { register } = useUserStore()
       :rules="[ val => val.length <= 32 || 'Please use a maximum of 64 characters',
           val => val.length > 0 || 'Please confirm password']"
  />
+    <div class="text-negative" v-if="error">{{ error }}</div>
     <q-btn label="Register" type="submit" />
     <a @click="$emit('toggle-forms')" class="cursor-pointer" style="padding: 5px; margin-left: 20px; display: inline-block;">Login</a>
-    <!-- <div v-if="errors">{{errors}}</div> -->
   </q-form>
 </template>
 
@@ -40,7 +44,6 @@ const { register } = useUserStore()
   export default {
     data() {
       return {
-        errors: null,
         username: '',
         password: '',
         passwordConfirmation: ''
