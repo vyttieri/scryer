@@ -22,7 +22,7 @@
     - `go install`
     - Create `.env` file (in `scryer-backend/`) with the env variables as listed in `.env_template`:
         - `ONESTEPGPS_API_KEY`
-        - `SESSION_SECRET` (can generate using `head -c20 /dev/urandom | base64` )
+        - `SESSION_SECRET` (can generate using `cat /dev/urandom | env LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1` )
         - `DB_HOST`
         - `DB_PORT`
         - `DB_NAME`
