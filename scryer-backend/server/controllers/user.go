@@ -10,7 +10,6 @@ import (
 	"scryer-backend/db/models"
 )
 
-
 type createUserInput struct {
 	Username string `json:"username" binding:"required,gte=1,lte=32"`
 	Password string `json:"password" binding:"required,gte=1,lte=64"`
@@ -36,10 +35,7 @@ func CreateUser(c *gin.Context) {
 	// Ensure we have all the required fields
 	if err := c.ShouldBindJSON(&input); err != nil {
 		fmt.Println("Failed to bind createUserInput", err.Error())
-
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		c.Abort()
-
 		return
 	}
 
@@ -47,10 +43,7 @@ func CreateUser(c *gin.Context) {
 	user := models.User{Username: input.Username, Password: input.Password}
 	if err := user.HashPassword(); err != nil {
 		fmt.Println("Failed to hash password", err.Error())
-
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		c.Abort()
-
 		return
 	}
 
@@ -68,10 +61,7 @@ func CreateUser(c *gin.Context) {
 	// Create User & DevicePreferences in DB
 	if err := user.Create(); err != nil {
 		fmt.Println("Failed to create User & DevicePreferences", err.Error())
-
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
-		c.Abort()
-
 		return
 	}
 
@@ -81,13 +71,11 @@ func CreateUser(c *gin.Context) {
 	if err := session.Save(); err != nil {
 		fmt.Println("Failed to save user session", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
-
 		return
 	}
 
-	fmt.Println("Succesfully registered user")
-
 	// Good job team
+	fmt.Println("registered user")
 	c.JSON(http.StatusCreated, gin.H{"user": user})
 }
 
@@ -111,10 +99,7 @@ func UpdateDevicePreferences(c *gin.Context) {
 	var input updateDevicePreferencesInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		fmt.Println("Failed to bind updateDevicePreferencesInput", err.Error())
-
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		c.Abort()
-
 		return
 	}
 
@@ -123,10 +108,7 @@ func UpdateDevicePreferences(c *gin.Context) {
 	user := models.User{ID: UserID}
 	if err := user.FindByID(); err != nil {
 		fmt.Println("Failed to find user", err.Error())
-
 		c.JSON(http.StatusInternalServerError, gin.H{})
-		c.Abort()
-
 		return
 	}
 
@@ -141,10 +123,7 @@ func UpdateDevicePreferences(c *gin.Context) {
 	}
 	if err := user.UpdateDevicePreferences(&devicePreferences); err != nil {
 		fmt.Println("Failed to update device preferences in database", err.Error())
-
 		c.JSON(http.StatusInternalServerError, gin.H{})
-		c.Abort()
-
 		return
 	}
 

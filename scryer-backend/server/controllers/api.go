@@ -18,14 +18,12 @@ func OneStepGpsData(c *gin.Context) {
 	fmt.Println("Unmarshalling json from OneStepGPS")
 	var jsonResponse interface{} // TODO: Should this be non generic?
 	if err := json.Unmarshal(response, &jsonResponse); err != nil {
+		fmt.Println("Failed to unmarshal OneStepGPS json:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
-		c.Abort()
-
 		return
 	}
 
 	fmt.Println("Finishing OneStepGpsData action", jsonResponse)
-	// TODO: Use Standard JSON Response format
 	c.JSON(http.StatusOK, gin.H{
 		"response": jsonResponse,
 	})

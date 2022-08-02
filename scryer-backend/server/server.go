@@ -20,7 +20,6 @@ func AuthRequired(c *gin.Context) {
 	if user == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User is not logged in"})
 		c.Abort()
-
 		return
 	}
 }
