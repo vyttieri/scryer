@@ -1,18 +1,15 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 
-import LoginForm from './LoginForm.vue'
-import RegistrationForm from './RegistrationForm.vue'
-
 import { useDeviceStore } from '@/stores/device'
-import { useDevicePreferencesStore } from '@/stores/devicePreferences'
+import { useDevicePreferenceStore } from '@/stores/devicePreferences'
 
-const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
+const deviceStore = useDeviceStore()
+const { getDeviceIcon } = useDevicePreferenceStore()
+const { visibleDevices } =  storeToRefs(deviceStore)
 </script>
 
 <template>
-	<LoginForm />
-	<RegistrationForm />
 	<GMapMap
 		:center="center"
 		:zoom="6"
@@ -22,7 +19,7 @@ const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
 			v-for="device in visibleDevices"
 			:position="device.latest_accurate_device_point.device_point_detail.lat_lng"
 			@click="$emit('set-center', device.latest_accurate_device_point.device_point_detail.lat_lng)"
-			:label="{ className: 'q-icons material-icons', fontFamily: 'Material Icons', text: 'directions_car', fontSize: '18px', color: '#fff' }"
+			:label="{ className: 'q-icons material-icons', fontFamily: 'Material Icons', text: getDeviceIcon(device), fontSize: '18px', color: '#fff' }"
 		/>
 	</GMapMap>
 </template>
@@ -30,7 +27,8 @@ const { devices, visibleDevices } =  storeToRefs(useDeviceStore())
 <script>
 export default {
 	props: {
-		center: String,
+		center: { lat: String, lng: String, },
+		setCenter: Function,
 	}
 }
 </script>

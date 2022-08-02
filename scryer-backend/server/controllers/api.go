@@ -10,20 +10,21 @@ import (
 	"scryer-backend/api"
 )
 
-// TODO: Error handling
 // GET /ping
-func OneStepGpsData(context *gin.Context) {
+func OneStepGpsData(c *gin.Context) {
+	fmt.Println("Starting OneStepGpsData action")
 	var response []byte = api.GetDeviceData()
 
-	fmt.Println("Unmarshalling json")
+	fmt.Println("Unmarshalling json from OneStepGPS")
 	var jsonResponse interface{} // TODO: Should this be non generic?
 	if err := json.Unmarshal(response, &jsonResponse); err != nil {
-		panic(err)
+		fmt.Println("Failed to unmarshal OneStepGPS json:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
 	}
 
-	fmt.Println(jsonResponse)
-	// TODO: Use Standard JSON Response format
-	context.JSON(http.StatusOK, gin.H{
+	fmt.Println("Finishing OneStepGpsData action", jsonResponse)
+	c.JSON(http.StatusOK, gin.H{
 		"response": jsonResponse,
 	})
 }

@@ -2,20 +2,43 @@
 "One who divines, sees or predicts the future by means of a scrying tool; especially a crystal ball."
 ![Scryer](scryer.png)
 
-### TODO
-- Make `golangci-lint` run properly in SublimeText
-- Error Handling (api, application, frontend); Data Validation (db, application, frontend)
-- Multiple `.gitignore` business
-- How to integrate JS dev server and Go? (Currently using Vite proxy request)
-- ~Pool or Persist MySQL Client~; How does this work with multiple connections?
+### Description
+- Displays GPS information from OneStepGPS API in a list format as well as on a Google Maps map.
+- Refreshes minutely to get up-to-date device GPS information.
+- User registration/login to save device preferences.
+    - Three saveable device preferences: Device visibility, device icon, and sort order (drag the devices to reorder)
+    - Click the save button in top right to save preferences to database.
+
+### Setup
+1. Database:
+   - A MySQL database is expected to be running with a database and database user.
+       - Can be created locally:
+       - `mysql -u root`
+       - `CREATE DATABASE scryer_db;`
+       - `CREATE USER 'scryer_user'@'localhost' IDENTIFIED BY 'onestepgpsr00lz';`
+       - `GRANT ALL PRIVILEGES ON scryer_db.* TO 'scryer_user'@'localhost' WITH GRANT OPTION;`
+2. Backend server:
+    - `cd scryer-backend/`
+    - `go install`
+    - Create `.env` file (in `scryer-backend/`) with the env variables as listed in `.env_template`:
+        - `ONESTEPGPS_API_KEY`
+        - `SESSION_SECRET` (can generate using `head -c20 /dev/urandom | base64` )
+        - `DB_HOST`
+        - `DB_PORT`
+        - `DB_NAME`
+        - `DB_USER`
+        - `DB_USER_PASSWORD`
+    - `go run main.go -- migrate` to run DB migrations
+3. Frontend server:
+    - `cd scryer-frontend/`
+    - `npm install`
+    - Create `.env` file (in `scryer-frontend/`) with the env variables as listed in `.env_template`:
+        - `VITE_GOOGLE_MAPS_API_KEY`
 
 ### Run
-- `go run main.go` or with air installed `air`
-- `go run main.go -- migrate` to run DB migrations
-- `npm run dev` runs the Vite dev server
-- `mysql.server start` runs MySQL on MacOS
-
-### Description
+- Database: `mysql.server start` (MacOS command)
+- Backend: `cd scryer-backend/`; `go run main.go` or with air installed `air`
+- Frontend: `cd scryer-frontend/`; `npm run dev`
 
 ### Development Plan
 1. ~Set up framework for Go web-server~
@@ -46,22 +69,16 @@
     - ~Send user preferences along with register action, create with user~
     - ~Send user preferences back with login action~
     - ~UPDATE user preferences on change~
-9. Prettify frontend
+9. ~Prettify frontend~
+    - ~draggable/sort~
+    - ~icon selector~
+    - ~modal for login/register forms~
+    - ~Layout~
+10. ~Code Cleanup~
 
-### Structure
-
-### Setup
-- `npm install`
-- `ONESTEPGPS_API_KEY` needs to be set in your local `ENV`
-    - `export ONESTEPGPS_API_KEY=[API_KEY]`
-- `SECRET` needs to be set in your local `ENV`; `head -c20 /dev/urandom | base64`
-    - `export JWT_SECRET_KEY=[SECRET_KEY]`
-- `VITE_GOOGLE_MAPS_API_KEY` needs to be set in `scryer-frontend/.env`
-- In MySQL: `CREATE DATABASE scryer;`; `CREATE USER 'scryer'@'localhost' IDENTIFIED BY 'onestepgpsr00lz';` `GRANT ALL PRIVILEGES ON scryer.* TO 'scryer'@'localhost' WITH GRANT OPTION;`
-
-### Limitations
-- Sending password over HTTP isn't great, would like to use SSL
-- JWT stored in localStorage is vulnerable to malicious JS. Worth considering other methods of storage.
-
-### Improvements
-- It would be great to define a more generalized API in which the client could request the specific fields they wanted to retrieve from the API. Since this project is limited in scope I opted to build an endpoint that serves exactly the data the client needs.
+### Limitations/Improvements
+- The OneStepGPS API endpoint is just a passthrough endpoint right now. It hits the API and then passes all that data back to the client. It would be good to tailor the endpoint to serve only the data the client needs to consume.
+- Production readiness - At a minimum, different environments, using a real logger, adding a build process to compile JS.
+- Password Hashing process could use, at a minimum, salts, for additional security. Ideally use a pre-built implementation that is secure.
+- Better error handling. The error handling is pretty simple and takes a one-size-fits-all approach. There could be more diverse error handling depending on what went wrong.
+- Better data validations. The data validations are more a proof of concept than anything else.

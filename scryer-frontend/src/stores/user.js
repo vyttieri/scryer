@@ -1,23 +1,26 @@
 import { defineStore } from 'pinia'
 
 import { useAuthStore } from '@/stores/auth'
-import { useDevicePreferencesStore } from '@/stores/devicePreferences'
+import { useDevicePreferenceStore } from '@/stores/devicePreferences'
 
 export const useUserStore = defineStore({
 	id: 'user',
 	state: () => ({
+		error: null,
 		userId: null,
-		username: null
+		username: null,
 	}),
+	persist: true,
 	actions: {
 		async register(username, password, passwordConfirmation) {
 			const jsonUser = {
 				username,
 				password,
 				passwordConfirmation,
-				devicePreferences: useDevicePreferencesStore().jsonDevicePreferences,
+				devicePreferences: useDevicePreferenceStore().jsonDevicePreferences,
 			}
-			console.log('stringify user:', JSON.stringify(jsonUser))
+
+		try {
 		 await fetch('http://localhost:5173/register', {
 				method: 'POST',
 				headers: {
@@ -26,11 +29,20 @@ export const useUserStore = defineStore({
 				},
 				body: JSON.stringify(jsonUser),
 			})
-		 	.then(response => response.json())
+		 	.then(response => {
+		 		if (response.ok) {
+		 			response.json()
+		 		} else {
+		 			throw new Error()
+		 		}
+			 })
 		 	.then(result => {
-   			  this.userId = result.user.userId
+   			  this.userId = result.user.id
 			  this.username = result.user.username
 		 	})
+		 } catch (error) {
+		 	this.error = 'Failed to register'
+		 }
 		},
 		setUser(userId, username) {
 			this.userId = userId

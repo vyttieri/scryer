@@ -3,83 +3,23 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 
-	// database "scryer-backend/db"
 	"scryer-backend/db/models"
 )
 
-type userLoginForm struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
+type createUserInput struct {
+	Username string `json:"username" binding:"required,gte=1,lte=32"`
+	Password string `json:"password" binding:"required,gte=1,lte=64"`
+	PasswordConfirmation string `json:"passwordConfirmation" binding:"required,gte=1,lte=64"`
 
-func Login(c *gin.Context) {
-	var input userLoginForm
-	if err := c.ShouldBindJSON(&input); err != nil {
-		fmt.Println(input)
-		panic(err.Error())
-		fmt.Println(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		c.Abort()
-
-		return
-	}
-
-	user := models.User{Username: input.Username, Password: input.Password}
-	if err := user.HashPassword(); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		c.Abort()
-
-		return
-	}
-
-	if err := user.FindByUsername(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		c.Abort()
-
-		return
-	}
-	session := sessions.Default(c)
-	session.Set("ID", user.ID)
-	if err := session.Save(); err != nil {
-		fmt.Println("Failed to login", err)
-		panic(err)
-	}
-
-	// Is there a way to do this in one fell swoop?
-	var devicePreferences []models.DevicePreference
-	if err := user.FindDevicePreferences(&devicePreferences); err != nil {
-		panic(err)
-		return
-	}
-	user.DevicePreferences = devicePreferences
-
-	c.JSON(http.StatusOK, gin.H{"user": user})
-	fmt.Println("Authenticated, userId")
-	fmt.Println(user.ID)
-}
-
-func Logout(c *gin.Context) {
-	session := sessions.Default(c)
-
-	session.Delete("ID")
-	if err := session.Save(); err != nil {
-		fmt.Println("Failed to save session", err)
-
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
-		c.Abort()
-
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{})
+	DevicePreferenceInputs []DevicePreferenceInput `json:"devicePreferences" binding:"required"`
 }
 
 // I really dislike "Preference" vs "Preferences", they should both be "Preferences"!
 // But I think it's a necessary evil to distinguish between the singular and the plural.
-// TODO: Wtf is going on with this binding bool situation
 type DevicePreferenceInput struct {
 	DeviceID string `json:"deviceId" binding:"required"`
 	SortPosition uint `json:"sortPosition" binding:"required"`
@@ -87,35 +27,23 @@ type DevicePreferenceInput struct {
 	Icon string `json:"icon" binding:"required"`
 }
 
-type createUserInput struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	PasswordConfirmation string `json:"passwordConfirmation" binding:"required"`
-
-	DevicePreferenceInputs []DevicePreferenceInput `json:"devicePreferences" binding:"required"`
-}
-
-// POST /users/
+// POST /register
 func CreateUser(c *gin.Context) {
+	fmt.Println("Started registering new user")
+
 	var input createUserInput
 	// Ensure we have all the required fields
 	if err := c.ShouldBindJSON(&input); err != nil {
-		fmt.Println(input)
-		panic(err.Error())
-		fmt.Println(err.Error())
+		fmt.Println("Failed to bind createUserInput", err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		c.Abort()
-
 		return
 	}
-	fmt.Println("after binding, input in CreateUser:")
-	fmt.Println(input)
+
 	// Hash password
 	user := models.User{Username: input.Username, Password: input.Password}
 	if err := user.HashPassword(); err != nil {
+		fmt.Println("Failed to hash password", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		c.Abort()
-
 		return
 	}
 
@@ -130,12 +58,10 @@ func CreateUser(c *gin.Context) {
 		}
 	}
 	user.DevicePreferences = devicePreferences
-	fmt.Println("generated devicePreferences: ", devicePreferences)
 	// Create User & DevicePreferences in DB
 	if err := user.Create(); err != nil {
+		fmt.Println("Failed to create User & DevicePreferences", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
-		c.Abort()
-
 		return
 	}
 
@@ -143,13 +69,13 @@ func CreateUser(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("ID", user.ID)
 	if err := session.Save(); err != nil {
-		fmt.Println("Failed to login", err)
+		fmt.Println("Failed to save user session", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
-
 		return
 	}
 
 	// Good job team
+	fmt.Println("registered user")
 	c.JSON(http.StatusCreated, gin.H{"user": user})
 }
 
@@ -166,23 +92,23 @@ type UpdateDevicePreferenceInput struct {
 	Icon string `json:"icon" binding:"required"`
 }
 
-// PUT /users/:id/preferences
+// PUT /user/preferences
 func UpdateDevicePreferences(c *gin.Context) {
+	fmt.Println("Starting update device preferences")
+
 	var input updateDevicePreferencesInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		fmt.Println(input)
-		panic(err.Error())
-
+		fmt.Println("Failed to bind updateDevicePreferencesInput", err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	session := sessions.Default(c)
 	UserID := session.Get("ID").(uint)
 	user := models.User{ID: UserID}
 	if err := user.FindByID(); err != nil {
+		fmt.Println("Failed to find user", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{})
-		c.Abort()
-
 		return
 	}
 
@@ -194,15 +120,13 @@ func UpdateDevicePreferences(c *gin.Context) {
 			SortPosition: devicePreferenceInput.SortPosition,
 			Visible: *devicePreferenceInput.Visible,
 		}
-
-		fmt.Println("devicePreference visible", *devicePreferenceInput.Visible)
 	}
 	if err := user.UpdateDevicePreferences(&devicePreferences); err != nil {
+		fmt.Println("Failed to update device preferences in database", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{})
-		c.Abort()
-
 		return
 	}
 
+	fmt.Println("Successfully updated device preferences")
 	c.JSON(http.StatusOK, gin.H{})
 }

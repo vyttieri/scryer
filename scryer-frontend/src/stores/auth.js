@@ -1,6 +1,7 @@
 import { defineStore, storeToRefs } from 'pinia'
 
-import { useDevicePreferencesStore } from '@/stores/devicePreferences'
+import { useDeviceStore } from '@/stores/device'
+import { useDevicePreferenceStore } from '@/stores/devicePreferences'
 import { useUserStore } from '@/stores/user'
 
 export const useAuthStore = defineStore({
@@ -9,12 +10,18 @@ export const useAuthStore = defineStore({
     error: null,
     loading: false,
   }),
+  getters: {
+    loggedIn: state => {
+      const { username } = storeToRefs(useUserStore())
+
+      return username.value !== null
+    }
+  },
   actions: {
     async login(username, password) {
       this.loading = true
       this.error = null
       try {
-        console.log('logging in', username, password)
         await fetch('http://localhost:5173/login', {
           method: 'POST',
           headers: {
@@ -23,9 +30,14 @@ export const useAuthStore = defineStore({
           },
           body: JSON.stringify({ username: username, password: password })
         })
-          .then(response => response.json())
+          .then(response => {
+            if (response.ok) {
+              return response.json()
+            } else {
+              throw new Error()
+            }
+          })
           .then(data => {
-            console.log(data.user)
             useUserStore().setUser(data.user.id, data.user.username)
 
             // convert from backend [] format to frontend {} format
@@ -41,31 +53,29 @@ export const useAuthStore = defineStore({
                     }
                   },
             {})
-            console.log('setting devicePreferences with:', devicePreferences)
-            useDevicePreferencesStore().setDevicePreferences(devicePreferences)
+            useDevicePreferenceStore().setDevicePreferences(devicePreferences)
           })
-
       } catch (error) {
-        console.log('got error logging in', error)
-        this.error = error
+        this.error = 'Failed to login'
       }
     },
     async logout() {
-      try {
-          console.log('logging out')
-          await fetch('http://localhost:5173/logout')
-            .then(response => {
-              if (response.status === 200) {
-                useUserStore().setUser(null, null)
-                console.log('successfully logged out')
-              } else {
-                // panic at the disco
-              }
-            })
-        } catch (error) {
-          console.log('got error logging in', error)
-          this.error = error
-        }
+      await fetch('http://localhost:5173/logout')
+        .then(response => {
+          if (response.status === 200) {
+            // reset user store
+            useUserStore().$reset()
+
+            // reset devicePreferences store. Basically reset it to null and then init
+            // from devices list again
+            const { devices } = storeToRefs(useDeviceStore())
+            const devicePreferenceStore = useDevicePreferenceStore()
+            devicePreferenceStore.$reset()
+            devicePreferenceStore.initOrPatchDevicePreferences(devices.value)
+          } else {
+            throw new Error("failed to logout, ", response.status)
+          }
+        })
     },
   }
 })
