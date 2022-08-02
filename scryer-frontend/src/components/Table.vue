@@ -86,13 +86,7 @@ function onListDrag(e) {
 <script>
 export default {
   props: {
-    center: {
-      type: String,
-      required: true,
-      // validator(value) {
-      //   return 'lat' in value &&'lng' in value && typeof(value[lat]) === 'string' && typeof(value[lng)]) === 'string'
-      // }
-    },
+    center: { lat: String, lng: String, },
   },
 }
 </script>
