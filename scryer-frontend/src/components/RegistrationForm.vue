@@ -34,7 +34,7 @@ const { error } = storeToRefs(userStore)
       :rules="[ val => val.length <= 32 || 'Please use a maximum of 64 characters',
           val => val.length > 0 || 'Please confirm password']"
  />
-    <div class="text-negative" v-if="error">{{ error }}</div>
+    <div class="text-negative" v-if="error" style="margin-left: 10px;">{{ error }}</div>
     <q-btn label="Register" type="submit" />
     <a @click="$emit('toggle-forms')" class="cursor-pointer" style="padding: 5px; margin-left: 20px; display: inline-block;">Login</a>
   </q-form>

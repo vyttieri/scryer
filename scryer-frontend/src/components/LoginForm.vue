@@ -24,7 +24,7 @@ const { error } = storeToRefs(authStore)
       style="margin-bottom: 10px;"
       :rules="[ val => val.length > 0 || 'Please enter a password' ]"
     />
-    <div class="text-negative" v-if="error">{{ error }}</div>
+    <div class="text-negative" v-if="error" style="margin-left: 10px;">{{ error }}</div>
     <q-btn label="Login" type="submit" />
     <a @click="$emit('toggle-forms')" class="cursor-pointer" style="padding: 5px; margin-left: 20px; display: inline-block;">Register</a>
   </q-form>
