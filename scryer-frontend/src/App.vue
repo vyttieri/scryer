@@ -8,7 +8,6 @@ import Header from '@/components/Header.vue'
 import Map from '@/components/Map.vue'
 import Table from '@/components/Table.vue'
 
-const { loading, error } = storeToRefs(useDeviceStore())
 const { fetchDevices }  = useDeviceStore()
 
 onMounted(() => {
@@ -23,8 +22,6 @@ onMounted(() => {
   <header>
   </header>
   <main>
-    <p v-if="loading">Loading device data...</p>
-    <p v-if="error">{{ error.message }}</p>
     <q-layout view="hHh lpR fFf">
       <Header />
       <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered :width="350">

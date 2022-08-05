@@ -2,6 +2,7 @@
 import { storeToRefs } from 'pinia'
 
 import { useAuthStore } from '@/stores/auth'
+import { useDeviceStore } from '@/stores/device'
 import { useUserStore } from '@/stores/user'
 import { useDevicePreferenceStore } from '@/stores/devicePreferences'
 
@@ -13,6 +14,8 @@ const { loggedIn } = storeToRefs(authStore)
 const { logout } = authStore
 
 const devicePreferenceStore = useDevicePreferenceStore()
+
+const { loading } = storeToRefs(useDeviceStore())
 
 const userStore = useUserStore()
 const { username } = storeToRefs(userStore)
@@ -30,6 +33,7 @@ const { username } = storeToRefs(userStore)
       </q-toolbar-title>
 
       <div>
+        <q-spinner v-if="loading" style="position: relative; left: -10px;" />
         <q-btn v-if="loggedIn" clickable><q-icon name="save" @click="devicePreferenceStore.updateDevicePreferences()" /></q-btn>
         <q-btn v-if="!loggedIn" label="Login" color="primary" @click="login = true" />
         <q-menu v-if="!loggedIn" style="padding: 4px;">
