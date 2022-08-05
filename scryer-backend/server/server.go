@@ -26,7 +26,7 @@ func AuthRequired(c *gin.Context) {
 }
 
 func Run(dbContext *db.DbContext) {
-	// create controllers with database context:
+	// wrap controllers that need database with DbContext
 	authController := controllers.AuthController{DbContext: dbContext}
 	userController := controllers.UserController{DbContext: dbContext}
 
