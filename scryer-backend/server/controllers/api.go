@@ -30,8 +30,6 @@ func OneStepGpsData(c *gin.Context) {
 	}
 
 	fmt.Println("Finishing OneStepGpsData action", jsonResponse)
-	c.JSON(http.StatusInternalServerError, gin.H{"error": err})
-
 	c.JSON(http.StatusOK, gin.H{
 		"response": jsonResponse,
 	})
