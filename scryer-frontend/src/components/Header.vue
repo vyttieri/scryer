@@ -1,5 +1,6 @@
 <script setup>
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useDeviceStore } from '@/stores/device'
@@ -19,6 +20,9 @@ const { loading } = storeToRefs(useDeviceStore())
 
 const userStore = useUserStore()
 const { username } = storeToRefs(userStore)
+
+let showRegister = ref(false)
+const toggleForms = () => showRegister.value = !showRegister.value
 </script>
 
 <template>
@@ -37,7 +41,7 @@ const { username } = storeToRefs(userStore)
         <q-btn v-if="loggedIn" clickable><q-icon name="save" @click="devicePreferenceStore.updateDevicePreferences()" /></q-btn>
         <q-btn v-if="!loggedIn" label="Login" color="primary" @click="login = true" />
         <q-menu v-if="!loggedIn" style="padding: 4px;">
-            <LoginForm v-if="register === false" @toggle-forms="toggleForms" />
+            <LoginForm v-if="!showRegister" @toggle-forms="toggleForms" />
             <RegistrationForm v-else @toggle-forms="toggleForms" />
         </q-menu>
         <q-btn v-if="loggedIn" label="Logout" color="primary" @click="logout()"/>
@@ -47,18 +51,3 @@ const { username } = storeToRefs(userStore)
     <q-ajax-bar />
   </q-header>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      register: false,
-    }
-  },
-  methods: {
-    toggleForms() {
-      this.register = !this.register
-    },
-  },
-}
-</script>

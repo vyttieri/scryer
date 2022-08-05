@@ -1,10 +1,15 @@
 <script setup>
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 const { register } = userStore
 const { error } = storeToRefs(userStore)
+
+let username = ref('')
+let password = ref('')
+let passwordConfirmation = ref('')
 </script>
 
 <template>
@@ -39,15 +44,3 @@ const { error } = storeToRefs(userStore)
     <a @click="$emit('toggle-forms')" class="cursor-pointer" style="padding: 5px; margin-left: 20px; display: inline-block;">Login</a>
   </q-form>
 </template>
-
-<script>
-  export default {
-    data() {
-      return {
-        username: '',
-        password: '',
-        passwordConfirmation: ''
-      }
-    }
-  }
-</script>

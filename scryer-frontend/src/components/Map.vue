@@ -1,8 +1,14 @@
 <script setup>
 import { storeToRefs } from 'pinia'
+import { defineProps } from 'vue'
 
 import { useDeviceStore } from '@/stores/device'
 import { useDevicePreferenceStore } from '@/stores/devicePreferences'
+
+defineProps({
+	center: { type: Object, required: true },
+	openedMarkerId: { type: String, required: true },
+})
 
 const deviceStore = useDeviceStore()
 const { getDeviceIcon } = useDevicePreferenceStore()
@@ -27,12 +33,3 @@ const { visibleDevices } =  storeToRefs(deviceStore)
 		</GMapMarker>
 	</GMapMap>
 </template>
-
-<script>
-export default {
-	props: {
-		center: { lat: String, lng: String, },
-		openedMarkerId: String,
-	},
-}
-</script>

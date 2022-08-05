@@ -2,9 +2,15 @@
 import draggable from 'vuedraggable'
 
 import { storeToRefs } from 'pinia'
+import { defineProps } from 'vue'
 
 import { useDeviceStore } from '@/stores/device'
 import { useDevicePreferenceStore } from '@/stores/devicePreferences'
+
+defineProps({
+  center: { type: Object, required: true },
+  openedMarkerId: { type: String, required: true },
+})
 
 const deviceStore = useDeviceStore()
 const { sortedDevices, loading, error } = storeToRefs(deviceStore)
@@ -82,12 +88,3 @@ function onListDrag(e) {
   background:  #eee;
 }
 </style>
-
-<script>
-export default {
-  props: {
-    center: { lat: String, lng: String, },
-    openedMarkerId: String,
-  },
-}
-</script>

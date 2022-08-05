@@ -1,10 +1,14 @@
 <script setup>
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 const { login } = authStore
 const { error } = storeToRefs(authStore)
+
+let username = ref('')
+let password = ref('')
 </script>
 
 <template>
@@ -29,14 +33,3 @@ const { error } = storeToRefs(authStore)
     <a @click="$emit('toggle-forms')" class="cursor-pointer" style="padding: 5px; margin-left: 20px; display: inline-block;">Register</a>
   </q-form>
 </template>
-
-<script>
-  export default {
-    data() {
-      return {
-        username: '',
-        password: '',
-      }
-    }
-  }
-</script>

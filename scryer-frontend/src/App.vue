@@ -1,6 +1,6 @@
 <script setup>
 import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { useDeviceStore } from '@/stores/device'
 
@@ -16,6 +16,20 @@ onMounted(() => {
   // 60,000 ms = 1 minute; set interval slightly longer than server-side cache timeout ()
   setInterval(fetchDevices, 61000)
 })
+
+/* I opted to keep "center" and "openedMarkerId" out of the data stores, as it doesn't deal with
+ API or backend data. Also, seemed like a good way to learn a little bit
+ about props and data management using plain Vue.
+
+If the app were to grow, it'd probably make sense to eventually move such
+"client-side settings" to a data store as well.
+*/
+const californiaCenter = { lat: 36.778300, lng: -119.417900 }
+let center = ref(californiaCenter)
+const setCenter = position => center.value = position
+
+let openedMarkerId = ref(null)
+const setOpenMarker = deviceId => openedMarkerId.value = deviceId
 </script>
 
 <template>
@@ -43,31 +57,3 @@ onMounted(() => {
     </q-layout>
   </main>
 </template>
-
-<script>
-const californiaCenter = { lat: 36.778300, lng: -119.417900 }
-/* I opted to keep "center" out of the data stores, as it doesn't deal with
- API or backend data. Also, seemed like a good way to learn a little bit
- about props and data management using plain Vue.
-
-If the app were to grow, it'd probably make sense to eventually move such
-"client-side settings" to a data store as well.
-*/
-export default {
-  data() {
-    return {
-      center: californiaCenter,
-      openedMarkerId: null,
-    }
-  },
-  methods: {
-    setCenter(position) {
-      this.center = position
-    },
-    setOpenMarker(deviceId) {
-      console.log('setting marker, old, new', this.openedMarkerId, deviceId)
-      this.openedMarkerId = deviceId
-    }
-  },
-}
-</script>
