@@ -7,15 +7,20 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 
+	"scryer-backend/db"
 	"scryer-backend/db/models"
 )
+
+type AuthController struct {
+	DbContext *db.DbContext
+}
 
 type userLoginForm struct {
 	Username string `json:"username" binding:"required,gte=1,lte=32"`
 	Password string `json:"password" binding:"required,gte=1,lte=64"`
 }
 
-func Login(c *gin.Context) {
+func (controller *AuthController) Login(c *gin.Context) {
 	fmt.Println("Logging in user")
 
 	var input userLoginForm
@@ -38,7 +43,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	if err := user.FindByUsername(); err != nil {
+	if err := user.FindByUsername(controller.DbContext); err != nil {
 		fmt.Println("Failed to find user", err.Error())
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -60,7 +65,7 @@ func Login(c *gin.Context) {
 
 	// Is there a way to do this in one fell swoop?
 	var devicePreferences []models.DevicePreference
-	if err := user.FindDevicePreferences(&devicePreferences); err != nil {
+	if err := user.FindDevicePreferences(controller.DbContext, &devicePreferences); err != nil {
 		fmt.Println("Failed to find devicePreferences", err.Error())
 
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -75,7 +80,7 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"user": user})
 }
 
-func Logout(c *gin.Context) {
+func (controller *AuthController) Logout(c *gin.Context) {
 	fmt.Println("Logging out user")
 
 	session := sessions.Default(c)

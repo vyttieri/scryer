@@ -3,13 +3,13 @@ package migrations
 import	(
 	"fmt"
 
-	database "scryer-backend/db"
+	"scryer-backend/db"
 	"scryer-backend/db/models"
 )
 
-func Run() {
+func Run(dbContext *db.DbContext) {
 	fmt.Println("Starting DB Migration")
-	database.Connection.AutoMigrate(&models.User{})
-	database.Connection.AutoMigrate(&models.DevicePreference{})
+	dbContext.Connection.AutoMigrate(&models.User{})
+	dbContext.Connection.AutoMigrate(&models.DevicePreference{})
 	fmt.Println("Finished DB Migration")
 }

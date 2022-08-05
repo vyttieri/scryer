@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	database "scryer-backend/db"
+	"scryer-backend/db"
 	"scryer-backend/db/migrations"
 	"scryer-backend/env"
 	"scryer-backend/server"
@@ -12,16 +12,16 @@ import (
 func main() {
 	env.LoadEnv()
 
-	database.Connect()
+	dbContext := db.Connect()
 
 	flag.Parse()
 	cmd := flag.Arg(0)
 	switch cmd {
 	case "migrate":
-		migrations.Run()
+		migrations.Run(dbContext)
 	case "server":
-		server.Run()
+		server.Run(dbContext)
 	default:
-		server.Run()
+		server.Run(dbContext)
 	}
 }
