@@ -20,9 +20,9 @@
 2. Backend server:
     - `cd scryer-backend/`
     - `go install`
-    - Create `.env` file (in `scryer-backend/`) with the env variables as listed in `.env_template`:
+    - `cp .env_template .env` (in `scryer-backend/`, and fill out the env variables:
         - `ONESTEPGPS_API_KEY`
-        - `SESSION_SECRET` (can generate using `head -c20 /dev/urandom | base64` )
+        - `SESSION_SECRET` (can generate using `cat /dev/urandom | env LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1` )
         - `DB_HOST`
         - `DB_PORT`
         - `DB_NAME`
@@ -32,8 +32,8 @@
 3. Frontend server:
     - `cd scryer-frontend/`
     - `npm install`
-    - Create `.env` file (in `scryer-frontend/`) with the env variables as listed in `.env_template`:
-        - `VITE_GOOGLE_MAPS_API_KEY`
+    - `cp .env_template .env` (in `scryer-frontend/`), and fill out the env variables:
+        - `VITE_GOOGLE_MAPS_API_KEY` (this is your API Key from Google for Google Maps API)
 
 ### Run
 - Database: `mysql.server start` (MacOS command)
