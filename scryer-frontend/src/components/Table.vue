@@ -2,9 +2,15 @@
 import draggable from 'vuedraggable'
 
 import { storeToRefs } from 'pinia'
+import { defineProps } from 'vue'
 
 import { useDeviceStore } from '@/stores/device'
 import { useDevicePreferenceStore } from '@/stores/devicePreferences'
+
+defineProps({
+  center: { type: Object, required: true },
+  openedMarkerId: { type: String, required: true },
+})
 
 const deviceStore = useDeviceStore()
 const { sortedDevices, loading, error } = storeToRefs(deviceStore)
@@ -43,7 +49,7 @@ function onListDrag(e) {
             <q-item-section >
               <q-icon v-if="getDeviceVisibility(element)" color="primary" name="visibility" @click="setDeviceVisibility(element)" class="cursor-pointer list-icon" />
               <q-icon v-else color="negative" name="visibility_off" @click="setDeviceVisibility(element)" class="cursor-pointer list-icon" />
-              <q-icon color="primary" name="my_location" @click="$emit('set-center', element.latest_accurate_device_point.device_point_detail.lat_lng)" class="cursor-pointer list-icon" />
+              <q-icon color="primary" name="my_location" @click="$emit('set-center', element.latest_accurate_device_point.device_point_detail.lat_lng); $emit('set-open-marker', element.device_id)" class="cursor-pointer list-icon" />
             </q-item-section>
             <q-item-section class="list-fab">
               <q-fab color="red" text-color="white" :icon="getDeviceIcon(element)">
@@ -59,6 +65,7 @@ function onListDrag(e) {
           </q-item>
       </template>
     </draggable>
+  <q-item v-if="error" class="text-negative">Error fetching device data from OneStepGPS. Trying again in 60 seconds.</q-item>
   </q-list>
 </template>
 
@@ -82,11 +89,3 @@ function onListDrag(e) {
   background:  #eee;
 }
 </style>
-
-<script>
-export default {
-  props: {
-    center: { lat: String, lng: String, },
-  },
-}
-</script>

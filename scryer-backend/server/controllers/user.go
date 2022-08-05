@@ -7,8 +7,13 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 
+	"scryer-backend/db"
 	"scryer-backend/db/models"
 )
+
+type UserController struct {
+	DbContext *db.DbContext
+}
 
 type createUserInput struct {
 	Username string `json:"username" binding:"required,gte=1,lte=32"`
@@ -28,7 +33,7 @@ type DevicePreferenceInput struct {
 }
 
 // POST /register
-func CreateUser(c *gin.Context) {
+func (controller *UserController) CreateUser(c *gin.Context) {
 	fmt.Println("Started registering new user")
 
 	var input createUserInput
@@ -59,7 +64,7 @@ func CreateUser(c *gin.Context) {
 	}
 	user.DevicePreferences = devicePreferences
 	// Create User & DevicePreferences in DB
-	if err := user.Create(); err != nil {
+	if err := user.Create(controller.DbContext); err != nil {
 		fmt.Println("Failed to create User & DevicePreferences", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
@@ -93,7 +98,7 @@ type UpdateDevicePreferenceInput struct {
 }
 
 // PUT /user/preferences
-func UpdateDevicePreferences(c *gin.Context) {
+func (controller *UserController) UpdateDevicePreferences(c *gin.Context) {
 	fmt.Println("Starting update device preferences")
 
 	var input updateDevicePreferencesInput
@@ -106,7 +111,7 @@ func UpdateDevicePreferences(c *gin.Context) {
 	session := sessions.Default(c)
 	UserID := session.Get("ID").(uint)
 	user := models.User{ID: UserID}
-	if err := user.FindByID(); err != nil {
+	if err := user.FindByID(controller.DbContext); err != nil {
 		fmt.Println("Failed to find user", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{})
 		return
@@ -121,7 +126,7 @@ func UpdateDevicePreferences(c *gin.Context) {
 			Visible: *devicePreferenceInput.Visible,
 		}
 	}
-	if err := user.UpdateDevicePreferences(&devicePreferences); err != nil {
+	if err := user.UpdateDevicePreferences(controller.DbContext, &devicePreferences); err != nil {
 		fmt.Println("Failed to update device preferences in database", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{})
 		return

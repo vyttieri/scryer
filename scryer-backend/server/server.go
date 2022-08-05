@@ -11,6 +11,7 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 
+	"scryer-backend/db"
 	"scryer-backend/server/controllers"
 )
 
@@ -24,7 +25,11 @@ func AuthRequired(c *gin.Context) {
 	}
 }
 
-func Run() {
+func Run(dbContext *db.DbContext) {
+	// wrap controllers that need database with DbContext
+	authController := controllers.AuthController{DbContext: dbContext}
+	userController := controllers.UserController{DbContext: dbContext}
+
 	r := gin.Default()
 	r.LoadHTMLFiles("templates/index.html")
 
@@ -36,14 +41,14 @@ func Run() {
 	store := persistence.NewInMemoryStore(time.Second)
 	r.GET("/ping", cache.CachePage(store, time.Minute, controllers.OneStepGpsData))
 
-	r.POST("/register", controllers.CreateUser)
-	r.POST("/login", controllers.Login)
+	r.POST("/register", userController.CreateUser)
+	r.POST("/login", authController.Login)
 
 	// Both these routes require login
 	private := r.Group("/")
 	private.Use(AuthRequired)
-	private.GET("/logout", controllers.Logout)
-	private.PUT("/user/preferences", controllers.UpdateDevicePreferences)
+	private.GET("/logout", authController.Logout)
+	private.PUT("/user/preferences", userController.UpdateDevicePreferences)
 
 	r.Run()
 }

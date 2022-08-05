@@ -25,20 +25,29 @@ export const useDeviceStore = defineStore({
   actions: {
     async fetchDevices() {
        this.loading = true
+       this.error = null
 
       try {
-        const devices = await fetch('http://localhost:5173/ping')
+        await fetch('http://localhost:5173/ping')
           .then(response => response.json())
           .then(data => data.response.result_list)
-        this.devices = devices
+          .then(devices => {
+            this.devices = devices
 
-        const { initOrPatchDevicePreferences } = useDevicePreferenceStore()
-        initOrPatchDevicePreferences(devices)
+            const { initOrPatchDevicePreferences } = useDevicePreferenceStore()
+            initOrPatchDevicePreferences(devices)
+
+            // The fetch was honestly happening so quickly you couldn't see it in the UI.
+            // Adding a 1s delay here ensures the user sees that something is happening.
+            setTimeout(() => {
+              this.loading = false
+              this.error = null
+             }, 1000) // 1000ms = 1second
+          })
       } catch (error) {
         this.error = error
+        this.loading = false
       }
-
-      this.loading = false
     },
   }
 })

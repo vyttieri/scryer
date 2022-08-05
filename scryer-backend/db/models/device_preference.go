@@ -1,7 +1,7 @@
 package models
 
 import (
-	database "scryer-backend/db"
+	"scryer-backend/db"
 )
 
 type DevicePreference struct {
@@ -13,6 +13,6 @@ type DevicePreference struct {
 	Icon string `json:"icon"`
 }
 
-func (devicePreference *DevicePreference) Save() error {
-	return database.Connection.Save(&devicePreference).Error
+func (devicePreference *DevicePreference) Save(dbContext *db.DbContext) error {
+	return dbContext.Connection.Save(&devicePreference).Error
 }

@@ -3,7 +3,7 @@ package models
 import (
 	"golang.org/x/crypto/bcrypt"
 
-	database "scryer-backend/db"
+	"scryer-backend/db"
 )
 
 type User struct {
@@ -28,20 +28,20 @@ func (user *User) CheckPassword(password string) (bool, error) {
 	return err == nil, err
 }
 
-func (user *User) Create() error {
-	return database.Connection.Create(&user).Error
+func (user *User) Create(dbContext *db.DbContext) error {
+	return dbContext.Connection.Create(&user).Error
 }
 
-func (user *User) FindByID() error {
-	return database.Connection.Where(&User{Username: user.Username}).First(&user).Error
+func (user *User) FindByID(dbContext *db.DbContext) error {
+	return dbContext.Connection.Where(&User{Username: user.Username}).First(&user).Error
 }
 
-func (user *User) FindByUsername() error {
-	return database.Connection.Where(&User{Username: user.Username}).First(&user).Error
+func (user *User) FindByUsername(dbContext *db.DbContext) error {
+	return dbContext.Connection.Where(&User{Username: user.Username}).First(&user).Error
 }
 
-func (user *User) FindDevicePreferences(devicePreferences *[]DevicePreference) error {
-	association := database.Connection.Model(&user).Association("DevicePreferences")
+func (user *User) FindDevicePreferences(dbContext *db.DbContext, devicePreferences *[]DevicePreference) error {
+	association := dbContext.Connection.Model(&user).Association("DevicePreferences")
 	if err := association.Error; err != nil {
 		return err
 	}
@@ -63,10 +63,10 @@ func (user *User) FindDevicePreferences(devicePreferences *[]DevicePreference) e
 	That's not ideal either. So I decided to stick with the good old update per row, which isn't the end of the world here,
 	as we're only updating 6 rows at a time. If this project were to scale I would defintely want to implemenet a batch solution.
 */
-func (user *User) UpdateDevicePreferences(devicePreferences *[]DevicePreference) error {
+func (user *User) UpdateDevicePreferences(dbContext *db.DbContext, devicePreferences *[]DevicePreference) error {
 	for _, devicePreference := range *devicePreferences {
 		// Using a map for the Updates call is necessary because otherwise gORM will not update "zero" values i.e. 0 or false.
-		err := database.Connection.Model(&devicePreference).Where("user_id = ?", user.ID).Updates(map[string]interface{}{
+		err := dbContext.Connection.Model(&devicePreference).Where("user_id = ?", user.ID).Updates(map[string]interface{}{
 			"icon": devicePreference.Icon,
 			"sort_position": devicePreference.SortPosition,
 			"visible": devicePreference.Visible,
