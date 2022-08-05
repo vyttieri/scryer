@@ -43,7 +43,7 @@ function onListDrag(e) {
             <q-item-section >
               <q-icon v-if="getDeviceVisibility(element)" color="primary" name="visibility" @click="setDeviceVisibility(element)" class="cursor-pointer list-icon" />
               <q-icon v-else color="negative" name="visibility_off" @click="setDeviceVisibility(element)" class="cursor-pointer list-icon" />
-              <q-icon color="primary" name="my_location" @click="$emit('set-center', element.latest_accurate_device_point.device_point_detail.lat_lng)" class="cursor-pointer list-icon" />
+              <q-icon color="primary" name="my_location" @click="$emit('set-center', element.latest_accurate_device_point.device_point_detail.lat_lng); $emit('set-open-marker', element.device_id)" class="cursor-pointer list-icon" />
             </q-item-section>
             <q-item-section class="list-fab">
               <q-fab color="red" text-color="white" :icon="getDeviceIcon(element)">
@@ -87,6 +87,7 @@ function onListDrag(e) {
 export default {
   props: {
     center: { lat: String, lng: String, },
+    openedMarkerId: String,
   },
 }
 </script>

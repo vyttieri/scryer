@@ -18,9 +18,13 @@ const { visibleDevices } =  storeToRefs(deviceStore)
 			:key="device.device_id + '-marker'"
 			v-for="device in visibleDevices"
 			:position="device.latest_accurate_device_point.device_point_detail.lat_lng"
-			@click="$emit('set-center', device.latest_accurate_device_point.device_point_detail.lat_lng)"
+			@click="$emit('set-open-marker', device.device_id)"
 			:label="{ className: 'q-icons material-icons', fontFamily: 'Material Icons', text: getDeviceIcon(device), fontSize: '18px', color: '#fff' }"
-		/>
+		>
+			<GMapInfoWindow :opened="openedMarkerId == device.device_id">
+				{{ device.display_name}}
+			</GMapInfoWindow>
+		</GMapMarker>
 	</GMapMap>
 </template>
 
@@ -28,6 +32,7 @@ const { visibleDevices } =  storeToRefs(deviceStore)
 export default {
 	props: {
 		center: { lat: String, lng: String, },
+		openedMarkerId: String,
 	},
 }
 </script>

@@ -25,10 +25,20 @@ onMounted(() => {
     <q-layout view="hHh lpR fFf">
       <Header />
       <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered :width="350">
-        <Table :center="center" @set-center="setCenter" />
+        <Table
+          :center="center"
+          @set-center="setCenter"
+          :openedMarkerId="openedMarkerId"
+          @set-open-marker="setOpenMarker"
+        />
       </q-drawer>
       <q-page-container style="width:  100vw; height: 100vh;">
-        <Map :center="center"  @set-center="setCenter" />
+        <Map
+          :center="center"
+          @set-center="setCenter"
+          :openedMarkerId="openedMarkerId"
+          @set-open-marker="setOpenMarker"
+        />
       </q-page-container>
     </q-layout>
   </main>
@@ -47,11 +57,16 @@ export default {
   data() {
     return {
       center: californiaCenter,
+      openedMarkerId: null,
     }
   },
   methods: {
     setCenter(position) {
       this.center = position
+    },
+    setOpenMarker(deviceId) {
+      console.log('setting marker, old, new', this.openedMarkerId, deviceId)
+      this.openedMarkerId = deviceId
     }
   },
 }
