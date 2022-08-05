@@ -25,6 +25,7 @@ export const useDeviceStore = defineStore({
   actions: {
     async fetchDevices() {
        this.loading = true
+       this.error = false
 
       try {
         const devices = await fetch('http://localhost:5173/ping')

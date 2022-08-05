@@ -65,6 +65,7 @@ function onListDrag(e) {
           </q-item>
       </template>
     </draggable>
+  <q-item v-if="error" class="text-negative">Error fetching device data from OneStepGPS. Trying again in 60 seconds.</q-item>
   </q-list>
 </template>
 

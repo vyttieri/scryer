@@ -13,10 +13,16 @@ import (
 // GET /ping
 func OneStepGpsData(c *gin.Context) {
 	fmt.Println("Starting OneStepGpsData action")
-	var response []byte = api.GetDeviceData()
+
+	response, err := api.GetDeviceData()
+	if err != nil {
+		fmt.Println("Error fetching OneStepGPS data: %s", err)
+		c.JSON(http.StatusServiceUnavailable, gin.H{"error": err})
+		return
+	}
 
 	fmt.Println("Unmarshalling json from OneStepGPS")
-	var jsonResponse interface{} // TODO: Should this be non generic?
+	var jsonResponse interface{}
 	if err := json.Unmarshal(response, &jsonResponse); err != nil {
 		fmt.Println("Failed to unmarshal OneStepGPS json:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
@@ -24,6 +30,8 @@ func OneStepGpsData(c *gin.Context) {
 	}
 
 	fmt.Println("Finishing OneStepGpsData action", jsonResponse)
+	c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+
 	c.JSON(http.StatusOK, gin.H{
 		"response": jsonResponse,
 	})
